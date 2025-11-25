@@ -1,1 +1,3059 @@
-Hello
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <title>Pembelajaran Kimia VSEPR Interaktif</title><!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script><!-- Canva SDKs -->
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+    /* Custom scrollbar kecil tapi jelas */
+    .app-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .app-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .app-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(15, 118, 178, 0.5);
+      border-radius: 9999px;
+    }
+    .focus-ring:focus-visible {
+      outline: 2px solid #0ea5e9;
+      outline-offset: 2px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="w-full h-full m-0 p-0 bg-sky-100">
+  <header id="main-header" class="w-full bg-sky-700 text-white hidden">
+   <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div>
+     <h1 id="main-title" class="font-semibold tracking-tight">Pembelajaran Kimia Interaktif: Teori VSEPR &amp; Geometri Molekul</h1>
+     <p id="subtitle-text" class="text-sky-100/80">Aktivitas berbasis Kurikulum Merdeka untuk siswa kelas XI</p>
+    </div>
+    <div class="flex items-center gap-3"><span id="current-role-label" class="bg-sky-900/40 border border-sky-300/50 rounded-full px-3 py-1"> Mode: Belum memilih peran </span> <button id="switch-role-btn" class="focus-ring bg-white text-sky-700 font-medium px-3 py-1 rounded-full shadow-sm hover:bg-sky-50 transition"> Keluar </button>
+    </div>
+   </div>
+  </header>
+  <main class="w-full h-full">
+   <div class="max-w-6xl mx-auto px-4 py-4 h-full flex flex-col gap-4"><!-- Bar Navigasi Utama -->
+    <nav id="main-nav" aria-label="Navigasi utama" class="bg-white rounded-xl shadow-sm border border-sky-100 px-3 py-2 hidden">
+     <div class="flex flex-wrap gap-2"><button data-tab="cp-tp" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> CP &amp; TP </button> <button data-tab="phases" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> 5 Fase Pembelajaran </button> <button data-tab="materials" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> Bahan Ajar Interaktif </button> <button data-tab="quiz" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> Kuis Interaktif </button> <button data-tab="student-dashboard" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> Dashboard Siswa </button> <button data-tab="teacher-dashboard" class="focus-ring tab-btn bg-sky-50 text-sky-700 px-4 py-2 rounded-full font-medium hover:bg-sky-100"> Dashboard Guru </button>
+     </div>
+    </nav><!-- Area Konten -->
+    <section id="content-area" class="flex-1 min-h-0 flex flex-col gap-4"><!-- Panel Konten Tab -->
+     <section id="left-panel" class="flex-1 bg-sky-50/80 border border-sky-100 rounded-xl p-4 overflow-y-auto app-scrollbar min-h-[200px]" aria-live="polite"><!-- Tab: Login / Pilih Peran -->
+      <div id="tab-login" class="tab-panel flex items-center justify-center min-h-[500px]">
+       <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+         <h1 class="text-sky-900 font-bold mb-3" style="font-size: 2.5rem;">Pembelajaran Kimia Interaktif</h1>
+         <p class="text-sky-800 mb-2" style="font-size: 1.5rem;">Teori VSEPR &amp; Geometri Molekul</p>
+        </div><!-- Form Login Tunggal dengan Toggle -->
+        <div class="bg-white rounded-2xl border-2 border-sky-200 p-8 shadow-lg"><!-- Toggle Mode -->
+         <div class="flex bg-sky-100 rounded-full p-1 mb-6"><button type="button" id="toggle-student" class="flex-1 py-3 rounded-full font-bold transition-all" style="font-size: 1.125rem;"> 👨‍🎓 Siswa </button> <button type="button" id="toggle-teacher" class="flex-1 py-3 rounded-full font-bold transition-all" style="font-size: 1.125rem;"> 👨‍🏫 Guru </button>
+         </div><!-- Toggle Login/Register untuk Siswa -->
+         <div id="student-mode-toggle" class="flex justify-center gap-3 mb-4"><button type="button" id="toggle-login" class="px-4 py-2 rounded-lg font-medium transition-all" style="font-size: 1rem;"> Login </button> <button type="button" id="toggle-register" class="px-4 py-2 rounded-lg font-medium transition-all" style="font-size: 1rem;"> Daftar Akun Baru </button>
+         </div><!-- Form Login -->
+         <form id="unified-login-form" class="space-y-4"><!-- Field Email (hanya untuk siswa) -->
+          <div id="email-field"><label for="email-input" class="block text-sky-900 mb-2 font-medium" style="font-size: 1.125rem;">Email</label> <input id="email-input" name="email" type="email" required class="focus-ring w-full px-4 py-3 rounded-lg border-2 border-sky-200 text-sky-900 bg-sky-50" style="font-size: 1.125rem;" placeholder="contoh@email.com">
+          </div><!-- Field Nama -->
+          <div id="name-field"><label for="name-input" class="block text-sky-900 mb-2 font-medium" style="font-size: 1.125rem;"> <span id="name-label">Nama Lengkap</span> </label> <input id="name-input" name="name" type="text" required class="focus-ring w-full px-4 py-3 rounded-lg border-2 border-sky-200 text-sky-900 bg-sky-50" style="font-size: 1.125rem;" placeholder="Masukkan nama lengkap">
+          </div><!-- Field Password -->
+          <div id="password-field"><label for="password-input" class="block text-sky-900 mb-2 font-medium" style="font-size: 1.125rem;"> <span id="password-label">Password</span> </label> <input id="password-input" name="password" type="password" required class="focus-ring w-full px-4 py-3 rounded-lg border-2 border-sky-200 text-sky-900 bg-sky-50" style="font-size: 1.125rem;" placeholder="Masukkan password">
+          </div><!-- Field Konfirmasi Password (hanya saat register) -->
+          <div id="confirm-password-field" class="hidden"><label for="confirm-password-input" class="block text-sky-900 mb-2 font-medium" style="font-size: 1.125rem;">Konfirmasi Password</label> <input id="confirm-password-input" name="confirm-password" type="password" class="focus-ring w-full px-4 py-3 rounded-lg border-2 border-sky-200 text-sky-900 bg-sky-50" style="font-size: 1.125rem;" placeholder="Ulangi password">
+          </div><!-- Pesan Error -->
+          <div id="login-error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" style="font-size: 1rem;">
+          </div><!-- Pesan Sukses -->
+          <div id="login-success-msg" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg" style="font-size: 1rem;">
+          </div><!-- Tombol Submit --> <button type="submit" id="submit-btn" class="focus-ring w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-lg shadow-md transition" style="font-size: 1.25rem;"> Masuk sebagai Siswa </button> <!-- Info Tambahan -->
+          <p id="login-info" class="text-center text-sky-700 mt-4" style="font-size: 1rem;">Siswa perlu mendaftar dengan email untuk mengakses materi pembelajaran</p>
+         </form>
+        </div>
+       </div>
+      </div><!-- Tab: CP & TP -->
+      <div id="tab-cp-tp" class="tab-panel hidden">
+       <h2 id="cp-title" class="text-sky-900 font-semibold mb-2 text-base">Capaian Pembelajaran (CP) Kurikulum Merdeka</h2>
+       <ul class="list-disc list-inside text-sky-800 text-sm mb-4 space-y-1">
+        <li>Siswa mampu menjelaskan konsep <span class="font-semibold">VSEPR</span> dan <span class="font-semibold">hibridisasi</span> untuk menentukan bentuk molekul.</li>
+        <li>Siswa mampu menghubungkan bentuk molekul dengan sifat fisik dan kimia sederhana suatu senyawa.</li>
+       </ul>
+       <h3 id="tp-title" class="text-sky-900 font-semibold mb-2 text-sm">Tujuan Pembelajaran (TP)</h3>
+       <ol class="list-decimal list-inside text-sky-800 text-sm mb-4 space-y-1">
+        <li>Menganalisis pasangan elektron ikatan dan pasangan elektron bebas dalam molekul sederhana.</li>
+        <li>Menentukan bentuk molekul berdasarkan teori VSEPR.</li>
+        <li>Menjelaskan konsep hibridisasi (sp, sp², sp³) pada molekul sederhana.</li>
+        <li>Mengidentifikasi bentuk molekul dari beberapa contoh senyawa umum.</li>
+       </ol>
+       <h3 id="indicator-title" class="text-sky-900 font-semibold mb-2 text-sm">Indikator Pencapaian Kompetensi</h3>
+       <ul class="list-disc list-inside text-sky-800 text-sm space-y-1">
+        <li>Mampu menggambar pasangan elektron di sekitar atom pusat.</li>
+        <li>Mampu menyebutkan nama bentuk molekul (linier, segitiga datar, tetrahedral, dsb.).</li>
+        <li>Mampu menjelaskan jenis hibridisasi yang terjadi pada atom pusat.</li>
+        <li>Mampu menjawab soal konsep dan kasus terkait bentuk molekul dengan benar.</li>
+       </ul>
+      </div><!-- Tab: 5 Fase Pembelajaran -->
+      <div id="tab-phases" class="tab-panel hidden">
+       <h2 class="text-sky-900 font-semibold mb-3 text-base">Sintaks Pembelajaran 5 Fase</h2>
+       <p class="text-sky-800 text-sm mb-4">Klik pada fase untuk memulai aktivitas pembelajaran. Progress akan tersimpan otomatis.</p>
+       <div class="space-y-4"><!-- Fase 1 -->
+        <article class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm cursor-pointer hover:shadow-md transition" id="phase-1-card">
+         <div class="flex items-start justify-between gap-3 mb-2">
+          <div>
+           <h3 class="text-sky-900 font-semibold text-sm">Fase 1: ENGAGEMENT (Orientasi)</h3>
+           <p class="text-sky-800 text-xs">Membangkitkan minat dan mengaitkan materi dengan kehidupan sehari-hari.</p>
+          </div>
+          <div class="text-right">
+           <p class="text-[11px] text-sky-700">Durasi: 15 menit</p>
+           <div id="phase-1-status" class="mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[11px] font-medium bg-sky-50 border-sky-200 text-sky-800"><span class="status-dot w-2 h-2 rounded-full bg-sky-300"></span> <span class="status-text">Belum dimulai</span>
+           </div>
+          </div>
+         </div>
+         <div class="text-sky-800 text-xs">
+          <p><span class="font-semibold">Aktivitas:</span> Video pembuka, diskusi AI, dan prediksi bentuk molekul</p>
+         </div>
+        </article><!-- Fase 2 -->
+        <article class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm">
+         <div class="flex items-start justify-between gap-3 mb-2">
+          <div>
+           <h3 class="text-sky-900 font-semibold text-sm">Fase 2: EXPLORATION (Eksplorasi)</h3>
+           <p class="text-sky-800 text-xs">Siswa mengeksplorasi data/representasi untuk menemukan pola.</p>
+          </div>
+          <div class="text-right">
+           <p class="text-[11px] text-sky-700">Durasi: 15 menit</p><button id="phase-2-toggle" class="focus-ring mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[11px] font-medium bg-sky-50 border-sky-200 text-sky-800"> <span class="status-dot w-2 h-2 rounded-full bg-sky-300"></span> <span class="status-text">Belum selesai</span> </button>
+          </div>
+         </div>
+         <div class="text-sky-800 text-xs space-y-1">
+          <p><span class="font-semibold">Aktivitas:</span></p>
+          <ul class="list-disc list-inside space-y-1">
+           <li>Gunakan visualisasi 3D molekul untuk memutar model.</li>
+           <li>Catat jumlah pasangan elektron ikatan dan bebas pada beberapa contoh.</li>
+          </ul>
+         </div>
+        </article><!-- Fase 3 -->
+        <article class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm">
+         <div class="flex items-start justify-between gap-3 mb-2">
+          <div>
+           <h3 class="text-sky-900 font-semibold text-sm">Fase 3: EXPLANATION (Eksplanasi)</h3>
+           <p class="text-sky-800 text-xs">Siswa dan guru menyusun penjelasan ilmiah dari hasil eksplorasi.</p>
+          </div>
+          <div class="text-right">
+           <p class="text-[11px] text-sky-700">Durasi: 15 menit</p><button id="phase-3-toggle" class="focus-ring mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[11px] font-medium bg-sky-50 border-sky-200 text-sky-800"> <span class="status-dot w-2 h-2 rounded-full bg-sky-300"></span> <span class="status-text">Belum selesai</span> </button>
+          </div>
+         </div>
+         <div class="text-sky-800 text-xs space-y-1">
+          <p><span class="font-semibold">Aktivitas:</span></p>
+          <ul class="list-disc list-inside space-y-1">
+           <li>Membaca ringkasan teori VSEPR dan hibridisasi.</li>
+           <li>Diskusi dengan guru atau teman untuk mengklarifikasi konsep yang belum dipahami.</li>
+          </ul>
+         </div>
+        </article><!-- Fase 4 -->
+        <article class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm">
+         <div class="flex items-start justify-between gap-3 mb-2">
+          <div>
+           <h3 class="text-sky-900 font-semibold text-sm">Fase 4: ELABORATION (Elaborasi)</h3>
+           <p class="text-sky-800 text-xs">Siswa menerapkan konsep pada konteks/bentuk molekul lain.</p>
+          </div>
+          <div class="text-right">
+           <p class="text-[11px] text-sky-700">Durasi: 20 menit</p><button id="phase-4-toggle" class="focus-ring mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[11px] font-medium bg-sky-50 border-sky-200 text-sky-800"> <span class="status-dot w-2 h-2 rounded-full bg-sky-300"></span> <span class="status-text">Belum selesai</span> </button>
+          </div>
+         </div>
+         <div class="text-sky-800 text-xs space-y-1">
+          <p><span class="font-semibold">Aktivitas:</span></p>
+          <ul class="list-disc list-inside space-y-1">
+           <li>Mengerjakan worksheet digital tentang bentuk molekul dan jenis hibridisasi.</li>
+           <li>Membuat penjelasan singkat sendiri dan menuliskannya di bagian esai kuis.</li>
+          </ul>
+         </div>
+        </article><!-- Fase 5 -->
+        <article class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm">
+         <div class="flex items-start justify-between gap-3 mb-2">
+          <div>
+           <h3 class="text-sky-900 font-semibold text-sm">Fase 5: EVALUATION (Evaluasi)</h3>
+           <p class="text-sky-800 text-xs">Mengukur pemahaman siswa melalui kuis dan refleksi.</p>
+          </div>
+          <div class="text-right">
+           <p class="text-[11px] text-sky-700">Durasi: 20 menit</p><button id="phase-5-toggle" class="focus-ring mt-1 inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[11px] font-medium bg-sky-50 border-sky-200 text-sky-800"> <span class="status-dot w-2 h-2 rounded-full bg-sky-300"></span> <span class="status-text">Belum selesai</span> </button>
+          </div>
+         </div>
+         <div class="text-sky-800 text-xs space-y-1">
+          <p><span class="font-semibold">Aktivitas:</span></p>
+          <ul class="list-disc list-inside space-y-1">
+           <li>Mengerjakan kuis interaktif minimal 15 soal.</li>
+           <li>Membaca pembahasan dan rekomendasi belajar lanjutan.</li>
+          </ul>
+         </div>
+        </article>
+       </div>
+      </div><!-- Tab: Fase 1 Detail -->
+      <div id="tab-phase-1-detail" class="tab-panel hidden">
+       <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sky-900 font-semibold text-base">Fase 1: ENGAGEMENT (Orientasi) - 15 menit</h2><button id="back-to-phases" class="focus-ring bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-lg text-xs font-medium transition"> ← Kembali ke Menu Fase </button>
+       </div><!-- Progress Bar Fase 1 -->
+       <div class="bg-white rounded-xl border border-sky-100 p-3 mb-4">
+        <div class="flex items-center justify-between mb-2"><span class="text-xs font-semibold text-sky-900">Progress Fase 1</span> <span id="phase-1-progress-text" class="text-xs text-sky-700">0%</span>
+        </div>
+        <div class="w-full bg-sky-100 rounded-full h-3">
+         <div id="phase-1-progress-bar" class="bg-sky-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div class="mt-2 flex gap-2 text-[10px]"><span id="badge-video" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">📹 Video</span> <span id="badge-chat" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">💬 Diskusi AI</span> <span id="badge-prediction" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">📝 Prediksi</span>
+        </div>
+       </div><!-- Aktivitas 1: Video Pembuka -->
+       <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+        <div class="flex items-start justify-between mb-3">
+         <div>
+          <h3 class="text-sky-900 font-semibold text-sm mb-1">📹 Aktivitas 1: Menonton Video Pembuka (5 menit)</h3>
+          <p class="text-sky-800 text-xs">Video animasi: "Mengapa molekul air bengkok tapi CO₂ lurus?"</p>
+         </div>
+         <div id="check-video" class="text-2xl hidden">
+          ✅
+         </div>
+        </div>
+        <div class="bg-sky-50 rounded-lg p-4 mb-3 border-2 border-sky-200">
+         <div class="flex items-center gap-3 mb-3">
+          <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center text-white text-2xl flex-shrink-0">
+           ▶
+          </div>
+          <div class="flex-1">
+           <p class="text-sky-900 font-semibold text-sm mb-1">Link Video YouTube</p>
+           <p class="text-sky-700 text-xs">Salin link di bawah dan buka di browser untuk menonton video pembelajaran</p>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 border border-sky-200 mb-2">
+          <p class="text-sky-900 text-xs font-mono break-all">https://youtu.be/2_FK04r7brI?si=yUu-eB9Ds52MLq74</p>
+         </div><button onclick="navigator.clipboard.writeText('https://youtu.be/2_FK04r7brI?si=yUu-eB9Ds52MLq74').then(() => { this.textContent = '✓ Link Tersalin!'; setTimeout(() => { this.textContent = '📋 Salin Link Video'; }, 2000); })" class="focus-ring w-full bg-sky-600 hover:bg-sky-700 text-white text-center px-4 py-2 rounded-lg text-sm font-semibold transition shadow-md"> 📋 Salin Link Video </button>
+        </div>
+        <div class="flex items-center justify-between">
+         <p id="video-status" class="text-xs text-sky-700">Setelah menonton video, tandai sebagai selesai</p><button id="mark-video-done" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition"> Tandai Selesai </button>
+        </div>
+       </section><!-- Aktivitas 2: Diskusi AI Chatbot -->
+       <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+        <div class="flex items-start justify-between mb-3">
+         <div>
+          <h3 class="text-sky-900 font-semibold text-sm mb-1">💬 Aktivitas 2: Diskusi dengan AI Chatbot (5 menit)</h3>
+          <p class="text-sky-800 text-xs">Diskusikan pertanyaan: "Menurut kamu, apa yang mempengaruhi bentuk molekul?"</p>
+          <p class="text-sky-700 text-[11px] mt-1">Minimal 3 pertukaran percakapan untuk melanjutkan</p>
+         </div>
+         <div id="check-chat" class="text-2xl hidden">
+          ✅
+         </div>
+        </div>
+        <div id="chat-messages" class="bg-sky-50 rounded-lg p-3 mb-3 h-64 overflow-y-auto app-scrollbar space-y-2">
+         <div class="flex gap-2">
+          <div class="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white text-xs flex-shrink-0">
+           🤖
+          </div>
+          <div class="bg-white rounded-lg p-2 text-xs text-sky-900 max-w-[80%]">
+           Halo! Aku adalah asisten AI yang akan membantumu memahami bentuk molekul. Menurut kamu, apa yang mempengaruhi bentuk molekul? Coba pikirkan dari struktur atomnya! ��
+          </div>
+         </div>
+        </div>
+        <form id="chat-form" class="flex gap-2"><input id="chat-input" type="text" placeholder="Ketik jawabanmu di sini..." class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" required> <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition"> Kirim </button>
+        </form>
+        <p id="chat-counter" class="text-[11px] text-sky-700 mt-2">Percakapan: 0/3</p>
+       </section><!-- Aktivitas 3: Lembar Prediksi -->
+       <section class="bg-white rounded-xl border border-sky-100 p-4">
+        <div class="flex items-start justify-between mb-3">
+         <div>
+          <h3 class="text-sky-900 font-semibold text-sm mb-1">📝 Aktivitas 3: Lembar Prediksi Bentuk Molekul (5 menit)</h3>
+          <p class="text-sky-800 text-xs">Prediksi bentuk molekul berikut berdasarkan pengetahuanmu saat ini</p>
+         </div>
+         <div id="check-prediction" class="text-2xl hidden">
+          ✅
+         </div>
+        </div>
+        <form id="prediction-form" class="space-y-3">
+         <div class="grid gap-3">
+          <div class="flex items-center gap-3"><label class="text-xs font-medium text-sky-900 w-20">H₂O (Air)</label> <select name="h2o" required class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50"> <option value="">-- Pilih bentuk --</option> <option value="linear">Linear</option> <option value="bengkok">Bengkok</option> <option value="piramida">Piramida Trigonal</option> <option value="tetrahedral">Tetrahedral</option> <option value="trigonal-planar">Trigonal Planar</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><label class="text-xs font-medium text-sky-900 w-20">CO₂</label> <select name="co2" required class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50"> <option value="">-- Pilih bentuk --</option> <option value="linear">Linear</option> <option value="bengkok">Bengkok</option> <option value="piramida">Piramida Trigonal</option> <option value="tetrahedral">Tetrahedral</option> <option value="trigonal-planar">Trigonal Planar</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><label class="text-xs font-medium text-sky-900 w-20">NH₃ (Amonia)</label> <select name="nh3" required class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50"> <option value="">-- Pilih bentuk --</option> <option value="linear">Linear</option> <option value="bengkok">Bengkok</option> <option value="piramida">Piramida Trigonal</option> <option value="tetrahedral">Tetrahedral</option> <option value="trigonal-planar">Trigonal Planar</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><label class="text-xs font-medium text-sky-900 w-20">CH₄ (Metana)</label> <select name="ch4" required class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50"> <option value="">-- Pilih bentuk --</option> <option value="linear">Linear</option> <option value="bengkok">Bengkok</option> <option value="piramida">Piramida Trigonal</option> <option value="tetrahedral">Tetrahedral</option> <option value="trigonal-planar">Trigonal Planar</option> </select>
+          </div>
+          <div class="flex items-center gap-3"><label class="text-xs font-medium text-sky-900 w-20">BF₃</label> <select name="bf3" required class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50"> <option value="">-- Pilih bentuk --</option> <option value="linear">Linear</option> <option value="bengkok">Bengkok</option> <option value="piramida">Piramida Trigonal</option> <option value="tetrahedral">Tetrahedral</option> <option value="trigonal-planar">Trigonal Planar</option> </select>
+          </div>
+         </div>
+         <div class="flex justify-end pt-2"><button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition"> Simpan Prediksi </button>
+         </div>
+        </form><!-- Jawaban Benar (muncul setelah submit) -->
+        <div id="prediction-answers" class="hidden mt-4 bg-green-50 border-2 border-green-200 rounded-lg p-4">
+         <h4 class="text-green-900 font-semibold text-sm mb-3 flex items-center gap-2"><span class="text-xl">✅</span> Jawaban Benar &amp; Penjelasan</h4>
+         <div class="space-y-3 text-xs">
+          <div class="bg-white rounded-lg p-3 border border-green-100">
+           <div class="flex items-start gap-2 mb-1"><span class="font-semibold text-green-900">H₂O (Air):</span> <span id="h2o-result" class="text-green-700"></span>
+           </div>
+           <p class="text-sky-800 ml-0"><strong>Jawaban benar: Bengkok</strong></p>
+           <p class="text-sky-700 text-[11px] mt-1">💡 H₂O memiliki 2 pasangan elektron ikatan dan 2 pasangan elektron bebas pada atom O. Tolakan dari pasangan bebas membuat bentuknya bengkok (V-shape) dengan sudut ~104,5°.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-green-100">
+           <div class="flex items-start gap-2 mb-1"><span class="font-semibold text-green-900">CO₂:</span> <span id="co2-result" class="text-green-700"></span>
+           </div>
+           <p class="text-sky-800 ml-0"><strong>Jawaban benar: Linear</strong></p>
+           <p class="text-sky-700 text-[11px] mt-1">💡 CO₂ memiliki 2 pasangan elektron ikatan (ikatan rangkap) dan tidak ada pasangan bebas pada atom C. Bentuknya linear dengan sudut 180°.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-green-100">
+           <div class="flex items-start gap-2 mb-1"><span class="font-semibold text-green-900">NH₃ (Amonia):</span> <span id="nh3-result" class="text-green-700"></span>
+           </div>
+           <p class="text-sky-800 ml-0"><strong>Jawaban benar: Piramida Trigonal</strong></p>
+           <p class="text-sky-700 text-[11px] mt-1">💡 NH₃ memiliki 3 pasangan elektron ikatan dan 1 pasangan bebas pada atom N. Bentuknya piramida trigonal dengan sudut ~107°.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-green-100">
+           <div class="flex items-start gap-2 mb-1"><span class="font-semibold text-green-900">CH₄ (Metana):</span> <span id="ch4-result" class="text-green-700"></span>
+           </div>
+           <p class="text-sky-800 ml-0"><strong>Jawaban benar: Tetrahedral</strong></p>
+           <p class="text-sky-700 text-[11px] mt-1">💡 CH₄ memiliki 4 pasangan elektron ikatan dan tidak ada pasangan bebas pada atom C. Bentuknya tetrahedral sempurna dengan sudut ~109,5°.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-green-100">
+           <div class="flex items-start gap-2 mb-1"><span class="font-semibold text-green-900">BF₃:</span> <span id="bf3-result" class="text-green-700"></span>
+           </div>
+           <p class="text-sky-800 ml-0"><strong>Jawaban benar: Trigonal Planar</strong></p>
+           <p class="text-sky-700 text-[11px] mt-1">💡 BF₃ memiliki 3 pasangan elektron ikatan dan tidak ada pasangan bebas pada atom B. Bentuknya trigonal planar (segitiga datar) dengan sudut 120°.</p>
+          </div>
+         </div>
+         <div id="prediction-score" class="mt-3 p-3 bg-sky-50 rounded-lg border border-sky-200">
+          <p class="text-sky-900 font-semibold text-sm">Skor Prediksi: <span id="prediction-score-value">0</span>/5</p>
+          <p class="text-sky-700 text-xs mt-1">Jangan khawatir jika prediksimu belum tepat! Ini adalah tahap awal pembelajaran. Kamu akan memahami konsep VSEPR lebih dalam di fase-fase berikutnya. 🌟</p>
+         </div>
+        </div>
+       </section><!-- Badge Fase 1 Selesai -->
+       <div id="phase-1-complete-badge" class="hidden mt-4 bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
+        <div class="text-4xl mb-2">
+         🎉
+        </div>
+        <h3 class="text-green-800 font-bold text-base mb-1">Fase 1 Selesai!</h3>
+        <p class="text-green-700 text-xs">Kamu telah menyelesaikan semua aktivitas di Fase 1. Lanjutkan ke fase berikutnya!</p>
+       </div>
+       <!-- Tab: Fase 2 Detail -->
+<div id="tab-phase-2-detail" class="tab-panel hidden">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sky-900 font-semibold text-base">Fase 2: EXPLORATION (Eksplorasi) - 25 menit</h2>
+    <button id="back-to-phases-2" class="focus-ring bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+      ← Kembali ke Menu Fase
+    </button>
+  </div>
+
+  <!-- Progress Bar Fase 2 -->
+  <div class="bg-white rounded-xl border border-sky-100 p-3 mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-semibold text-sky-900">Progress Fase 2</span>
+      <span id="phase-2-progress-text" class="text-xs text-sky-700">0%</span>
+    </div>
+    <div class="w-full bg-sky-100 rounded-full h-3">
+      <div id="phase-2-progress-bar" class="bg-sky-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div>
+    <div class="mt-2 flex gap-2 text-[10px]">
+      <span id="badge-simulation" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">🔬 Simulasi 3D</span>
+      <span id="badge-experiment" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">🧪 Eksperimen</span>
+      <span id="badge-reflection" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">📝 Refleksi</span>
+    </div>
+  </div>
+
+  <!-- Aktivitas 2.1: Simulasi Molekul 3D -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <h3 class="text-sky-900 font-semibold text-sm mb-1">🔬 Aktivitas 2.1: Simulasi Molekul 3D Interaktif (12 menit)</h3>
+        <p class="text-sky-800 text-xs">Amati 5 molekul dalam visualisasi 3D dan isi tabel observasi</p>
+      </div>
+      <div id="check-simulation" class="text-2xl hidden">✅</div>
+    </div>
+
+    <div class="bg-sky-50 rounded-lg p-4 mb-3 border-2 border-sky-200">
+      <div class="flex items-center gap-3 mb-3">
+        <select id="molecule-selector" class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-white">
+          <option value="h2o">H₂O (Air)</option>
+          <option value="nh3">NH₃ (Amonia)</option>
+          <option value="ch4">CH₄ (Metana)</option>
+          <option value="co2">CO₂</option>
+          <option value="bf3">BF₃</option>
+        </select>
+      </div>
+      <div class="bg-white rounded-lg p-3 border border-sky-200 mb-2 flex items-center justify-center" style="min-height: 200px;">
+        <svg id="molecule-3d-viewer" viewBox="0 0 200 200" class="w-full max-w-[300px]">
+          <!-- Akan diupdate dinamis oleh JS -->
+        </svg>
+      </div>
+      <div id="molecule-info" class="text-xs text-sky-800 p-2 bg-sky-50 rounded-lg">
+        <p><strong>Molekul:</strong> H₂O</p>
+        <p><strong>Bentuk:</strong> Bengkok</p>
+        <p><strong>PEI:</strong> 2 | <strong>PEB:</strong> 2</p>
+      </div>
+    </div>
+
+    <form id="observation-form" class="space-y-3">
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">Tabel Observasi Molekul:</label>
+        <textarea 
+          id="observation-notes" 
+          name="observations" 
+          required 
+          class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" 
+          rows="6" 
+          placeholder="Catat hasil observasimu untuk 5 molekul. Format:
+H2O: [jumlah PEI], [jumlah PEB], [bentuk], [sudut ikatan]
+NH3: ...
+(minimal 100 karakter)"></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition">
+          Simpan Observasi
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Aktivitas 2.2: Eksperimen Virtual -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <h3 class="text-sky-900 font-semibold text-sm mb-1">🧪 Aktivitas 2.2: Eksperimen Virtual Molekul Builder (8 menit)</h3>
+        <p class="text-sky-800 text-xs">Buat molekul dan amati perubahan bentuknya</p>
+      </div>
+      <div id="check-experiment" class="text-2xl hidden">✅</div>
+    </div>
+
+    <div class="bg-sky-50 rounded-lg p-4 mb-3 border-2 border-sky-200">
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-sky-900 mb-1">Task 1: Buat molekul tetrahedral dengan atom pusat C</label>
+          <textarea id="task1-answer" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-white" rows="2" placeholder="Jelaskan bagaimana kamu membuat molekul tetrahedral (min 30 karakter)"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-sky-900 mb-1">Task 2: Buat molekul bengkok dengan atom pusat O</label>
+          <textarea id="task2-answer" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-white" rows="2" placeholder="Jelaskan bagaimana kamu membuat molekul bengkok (min 30 karakter)"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-sky-900 mb-1">Task 3: Apa yang terjadi jika molekul tetrahedral ditambah 1 PEB?</label>
+          <textarea id="task3-answer" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-white" rows="2" placeholder="Jelaskan perubahan yang terjadi (min 30 karakter)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button id="submit-experiment" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition">
+        Submit Hasil Eksperimen
+      </button>
+    </div>
+  </section>
+
+  <!-- Aktivitas 2.3: Refleksi Mini -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4">
+    <div class="flex items-start justify-between mb-3">
+      <div>
+        <h3 class="text-sky-900 font-semibold text-sm mb-1">📝 Aktivitas 2.3: Refleksi Eksplorasi (5 menit)</h3>
+        <p class="text-sky-800 text-xs">Tuliskan pola yang kamu temukan dari eksplorasi</p>
+      </div>
+      <div id="check-reflection" class="text-2xl hidden">✅</div>
+    </div>
+
+    <form id="reflection-form" class="space-y-3">
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">Pola apa yang kamu temukan dari eksplorasi tadi?</label>
+        <textarea 
+          id="reflection-pattern" 
+          name="pattern" 
+          required 
+          class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" 
+          rows="3" 
+          placeholder="Jelaskan pola yang kamu temukan (minimal 50 karakter)"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">Bagaimana pasangan elektron bebas mempengaruhi bentuk?</label>
+        <textarea 
+          id="reflection-peb" 
+          name="peb_effect" 
+          required 
+          class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" 
+          rows="3" 
+          placeholder="Jelaskan pengaruh PEB terhadap bentuk molekul (minimal 50 karakter)"></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition">
+          Simpan Refleksi
+        </button>
+      </div>
+    </form>
+
+    <div id="ai-feedback-reflection" class="hidden mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900">
+      <p class="font-semibold mb-1">💡 Feedback AI:</p>
+      <p id="ai-feedback-text"></p>
+    </div>
+  </section>
+
+  <!-- Badge Fase 2 Selesai -->
+  <div id="phase-2-complete-badge" class="hidden mt-4 bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
+    <div class="text-4xl mb-2">🎉</div>
+    <h3 class="text-green-800 font-bold text-base mb-1">Fase 2 Selesai!</h3>
+    <p class="text-green-700 text-xs">Kamu telah menyelesaikan semua aktivitas eksplorasi. Lanjutkan ke Fase 3!</p>
+  </div>
+</div>
+
+<!-- Tab: Fase 3 Detail -->
+<div id="tab-phase-3-detail" class="tab-panel hidden">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sky-900 font-semibold text-base">Fase 3: EXPLANATION (Eksplanasi) - 30 menit</h2>
+    <button id="back-to-phases-3" class="focus-ring bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+      ← Kembali ke Menu Fase
+    </button>
+  </div>
+
+  <!-- Progress Bar Fase 3 -->
+  <div class="bg-white rounded-xl border border-sky-100 p-3 mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-semibold text-sky-900">Progress Fase 3</span>
+      <span id="phase-3-progress-text" class="text-xs text-sky-700">0%</span>
+    </div>
+    <div class="w-full bg-sky-100 rounded-full h-3">
+      <div id="phase-3-progress-bar" class="bg-sky-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Aktivitas 3.1: Materi Interaktif VSEPR -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">📖 Aktivitas 3.1: Membaca Materi Teori VSEPR (15 menit)</h3>
+    
+    <div class="space-y-3">
+      <!-- Accordion 1 -->
+      <div class="border border-sky-200 rounded-lg overflow-hidden">
+        <button class="accordion-btn w-full text-left px-4 py-3 bg-sky-50 hover:bg-sky-100 transition flex items-center justify-between" data-target="accordion-1">
+          <span class="text-sm font-semibold text-sky-900">1. Prinsip Dasar VSEPR</span>
+          <span class="accordion-icon text-sky-700">▼</span>
+        </button>
+        <div id="accordion-1" class="accordion-content hidden px-4 py-3 bg-white text-xs text-sky-800 space-y-2">
+          <p><strong>Valence Shell Electron Pair Repulsion (VSEPR)</strong> adalah teori yang menjelaskan bentuk molekul berdasarkan tolakan antar pasangan elektron.</p>
+          <p><strong>Prinsip utama:</strong> Pasangan elektron di sekitar atom pusat akan mengatur diri sedemikian rupa untuk meminimalkan tolakan, yaitu dengan menjauh sejauh mungkin satu sama lain.</p>
+          <p>💡 <em>Analogi:</em> Bayangkan balon yang diikat di satu titik. Balon-balon akan menjauh satu sama lain karena saling menolak.</p>
+          <div class="mt-2 p-2 bg-sky-50 rounded">
+            <p class="text-[11px]"><strong>Quiz:</strong> Mengapa pasangan elektron saling tolak-menolak?</p>
+            <input type="text" class="quiz-input w-full mt-1 px-2 py-1 border border-sky-200 rounded text-[11px]" placeholder="Ketik jawabanmu...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 2 -->
+      <div class="border border-sky-200 rounded-lg overflow-hidden">
+        <button class="accordion-btn w-full text-left px-4 py-3 bg-sky-50 hover:bg-sky-100 transition flex items-center justify-between" data-target="accordion-2">
+          <span class="text-sm font-semibold text-sky-900">2. Notasi AXE</span>
+          <span class="accordion-icon text-sky-700">▼</span>
+        </button>
+        <div id="accordion-2" class="accordion-content hidden px-4 py-3 bg-white text-xs text-sky-800">
+          <p><strong>A</strong> = Atom pusat</p>
+          <p><strong>X</strong> = Jumlah atom yang terikat (Pasangan Elektron Ikatan/PEI)</p>
+          <p><strong>E</strong> = Jumlah pasangan elektron bebas (PEB)</p>
+          <div class="mt-3 overflow-x-auto">
+            <table class="min-w-full text-[11px] border-collapse">
+              <thead class="bg-sky-100">
+                <tr>
+                  <th class="border border-sky-200 px-2 py-1">Notasi</th>
+                  <th class="border border-sky-200 px-2 py-1">Bentuk</th>
+                  <th class="border border-sky-200 px-2 py-1">Sudut</th>
+                  <th class="border border-sky-200 px-2 py-1">Contoh</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="border border-sky-200 px-2 py-1">AX₂</td>
+                  <td class="border border-sky-200 px-2 py-1">Linear</td>
+                  <td class="border border-sky-200 px-2 py-1">180°</td>
+                  <td class="border border-sky-200 px-2 py-1">CO₂</td>
+                </tr>
+                <tr>
+                  <td class="border border-sky-200 px-2 py-1">AX₃</td>
+                  <td class="border border-sky-200 px-2 py-1">Trigonal Planar</td>
+                  <td class="border border-sky-200 px-2 py-1">120°</td>
+                  <td class="border border-sky-200 px-2 py-1">BF₃</td>
+                </tr>
+                <tr>
+                  <td class="border border-sky-200 px-2 py-1">AX₄</td>
+                  <td class="border border-sky-200 px-2 py-1">Tetrahedral</td>
+                  <td class="border border-sky-200 px-2 py-1">109.5°</td>
+                  <td class="border border-sky-200 px-2 py-1">CH₄</td>
+                </tr>
+                <tr>
+                  <td class="border border-sky-200 px-2 py-1">AX₃E₁</td>
+                  <td class="border border-sky-200 px-2 py-1">Piramida Trigonal</td>
+                  <td class="border border-sky-200 px-2 py-1">107°</td>
+                  <td class="border border-sky-200 px-2 py-1">NH₃</td>
+                </tr>
+                <tr>
+                  <td class="border border-sky-200 px-2 py-1">AX₂E₂</td>
+                  <td class="border border-sky-200 px-2 py-1">Bengkok</td>
+                  <td class="border border-sky-200 px-2 py-1">104.5°</td>
+                  <td class="border border-sky-200 px-2 py-1">H₂O</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 3 -->
+      <div class="border border-sky-200 rounded-lg overflow-hidden">
+        <button class="accordion-btn w-full text-left px-4 py-3 bg-sky-50 hover:bg-sky-100 transition flex items-center justify-between" data-target="accordion-3">
+          <span class="text-sm font-semibold text-sky-900">3. Pengaruh PEB vs PEI</span>
+          <span class="accordion-icon text-sky-700">▼</span>
+        </button>
+        <div id="accordion-3" class="accordion-content hidden px-4 py-3 bg-white text-xs text-sky-800">
+          <p><strong>Urutan kekuatan tolakan:</strong> PEB-PEB > PEB-PEI > PEI-PEI</p>
+          <p class="mt-2">Pasangan elektron bebas (PEB) memiliki tolakan lebih besar karena:</p>
+          <ul class="list-disc list-inside space-y-1 ml-2 mt-1">
+            <li>Hanya terikat pada 1 atom (atom pusat)</li>
+            <li>Lebih bebas bergerak dan "gemuk"</li>
+            <li>Menempati ruang lebih besar</li>
+          </ul>
+          <p class="mt-2"><strong>Contoh:</strong></p>
+          <p>• CH₄ (4 PEI, 0 PEB): sudut 109.5° (tetrahedral sempurna)</p>
+          <p>• NH₃ (3 PEI, 1 PEB): sudut 107° (terdorong oleh PEB)</p>
+          <p>• H₂O (2 PEI, 2 PEB): sudut 104.5° (terdorong lebih kuat oleh 2 PEB)</p>
+        </div>
+      </div>
+
+      <!-- Accordion 4 -->
+      <div class="border border-sky-200 rounded-lg overflow-hidden">
+        <button class="accordion-btn w-full text-left px-4 py-3 bg-sky-50 hover:bg-sky-100 transition flex items-center justify-between" data-target="accordion-4">
+          <span class="text-sm font-semibold text-sky-900">4. Hibridisasi Orbital</span>
+          <span class="accordion-icon text-sky-700">▼</span>
+        </button>
+        <div id="accordion-4" class="accordion-content hidden px-4 py-3 bg-white text-xs text-sky-800">
+          <p><strong>Hibridisasi</strong> adalah pencampuran orbital atom untuk membentuk orbital hibrida baru.</p>
+          <div class="mt-2 space-y-2">
+            <div class="p-2 bg-sky-50 rounded">
+              <p class="font-semibold">sp → Linear</p>
+              <p>2 orbital hibrida, sudut 180°. Contoh: BeCl₂, CO₂</p>
+            </div>
+            <div class="p-2 bg-sky-50 rounded">
+              <p class="font-semibold">sp² → Trigonal Planar</p>
+              <p>3 orbital hibrida, sudut 120°. Contoh: BF₃, C₂H₄</p>
+            </div>
+            <div class="p-2 bg-sky-50 rounded">
+              <p class="font-semibold">sp³ → Tetrahedral</p>
+              <p>4 orbital hibrida, sudut 109.5°. Contoh: CH₄, NH₃, H₂O</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex items-center justify-between">
+      <p id="reading-progress" class="text-xs text-sky-700">Progress membaca: <span id="reading-percent">0</span>% (buka semua accordion)</p>
+      <button id="mark-reading-done" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition" disabled>
+        Selesai Membaca
+      </button>
+    </div>
+  </section>
+
+  <!-- Aktivitas 3.2: Tanya Jawab AI -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">💬 Aktivitas 3.2: Tanya Jawab dengan AI Tutor (10 menit)</h3>
+    <p class="text-sky-800 text-xs mb-3">Tanyakan minimal 2 pertanyaan tentang teori VSEPR atau hibridisasi</p>
+
+    <div id="chat-messages-phase3" class="bg-sky-50 rounded-lg p-3 mb-3 h-64 overflow-y-auto app-scrollbar space-y-2">
+      <div class="flex gap-2">
+        <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs flex-shrink-0">🎓</div>
+        <div class="bg-white rounded-lg p-2 text-xs text-sky-900 max-w-[80%]">
+          Halo! Aku Prof. Molekul, asisten AI yang ahli dalam teori VSEPR. Ada yang ingin kamu tanyakan tentang bentuk molekul atau hibridisasi? 😊
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form-phase3" class="flex gap-2">
+      <input id="chat-input-phase3" type="text" placeholder="Ketik pertanyaanmu di sini..." class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" required>
+      <button type="submit" class="focus-ring bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+        Kirim
+      </button>
+    </form>
+    <p id="chat-counter-phase3" class="text-[11px] text-sky-700 mt-2">Pertanyaan: 0/2</p>
+
+    <div class="mt-3 flex flex-wrap gap-2">
+      <p class="text-[11px] text-sky-700 w-full">Quick questions:</p>
+      <button class="quick-question-btn text-[11px] px-2 py-1 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition">Mengapa PEB lebih besar tolaknya?</button>
+      <button class="quick-question-btn text-[11px] px-2 py-1 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition">Bagaimana cara menentukan notasi AXE?</button>
+      <button class="quick-question-btn text-[11px] px-2 py-1 bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition">Apa bedanya bentuk molekul dan geometri elektron?</button>
+    </div>
+  </section>
+
+  <!-- Aktivitas 3.3: Contoh Soal Terbimbing -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">📝 Aktivitas 3.3: Contoh Soal Terbimbing (5 menit)</h3>
+    <p class="text-sky-800 text-xs mb-3">Kerjakan 3 soal berikut step-by-step</p>
+
+    <div class="space-y-3">
+      <!-- Soal 1 -->
+      <div class="border border-sky-200 rounded-lg p-3">
+        <p class="text-sm font-semibold text-sky-900 mb-2">Soal 1: Tentukan bentuk molekul H₂S</p>
+        <div class="space-y-2">
+          <button class="step-reveal-btn w-full text-left px-3 py-2 bg-sky-50 hover:bg-sky-100 rounded text-xs transition" data-step="1-1">
+            📌 Step 1: Gambar struktur Lewis → <span class="text-sky-600">Klik untuk lihat</span>
+          </button>
+          <div id="step-1-1" class="hidden pl-4 text-xs text-sky-800 border-l-2 border-sky-300 py-2">
+            <p>Struktur Lewis H₂S: H-S-H dengan 2 pasangan elektron bebas pada atom S</p>
+          </div>
+
+          <button class="step-reveal-btn w-full text-left px-3 py-2 bg-sky-50 hover:bg-sky-100 rounded text-xs transition" data-step="1-2">
+            📌 Step 2: Hitung PEI dan PEB → <span class="text-sky-600">Klik untuk lihat</span>
+          </button>
+          <div id="step-1-2" class="hidden pl-4 text-xs text-sky-800 border-l-2 border-sky-300 py-2">
+            <p>PEI (ikatan) = 2 (dua ikatan S-H)</p>
+            <p>PEB (bebas) = 2 (dua pasang elektron pada S)</p>
+          </div>
+
+          <button class="step-reveal-btn w-full text-left px-3 py-2 bg-sky-50 hover:bg-sky-100 rounded text-xs transition" data-step="1-3">
+            📌 Step 3: Tentukan notasi AXE → <span class="text-sky-600">Klik untuk lihat</span>
+          </button>
+          <div id="step-1-3" class="hidden pl-4 text-xs text-sky-800 border-l-2 border-sky-300 py-2">
+            <p>Notasi: AX₂E₂</p>
+          </div>
+
+          <button class="step-reveal-btn w-full text-left px-3 py-2 bg-sky-50 hover:bg-sky-100 rounded text-xs transition" data-step="1-4">
+            📌 Step 4: Kesimpulan bentuk → <span class="text-sky-600">Klik untuk lihat</span>
+          </button>
+          <div id="step-1-4" class="hidden pl-4 text-xs text-sky-800 border-l-2 border-sky-300 py-2">
+            <p class="font-semibold text-green-700">Bentuk molekul H₂S adalah BENGKOK (sama seperti H₂O)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soal 2 -->
+      <div class="border border-sky-200 rounded-
+      <!-- Soal 3 -->
+  <div class="border border-sky-200 rounded-lg p-3">
+    <p class="text-sm font-semibold text-sky-900 mb-2">Soal 3: Tentukan bentuk molekul XeF₄</p>
+    <div class="space-y-2">
+      <button class="step-reveal-btn w-full text-left px-3 py-2 bg-sky-50 hover:bg-sky-100 rounded text-xs transition" data-step="3-1">
+        📌 Lihat penyelesaian lengkap → <span class="text-sky-600">Klik untuk lihat</span>
+      </button>
+      <div id="step-3-1" class="hidden pl-4 text-xs text-sky-800 border-l-2 border-sky-300 py-2 space-y-1">
+        <p>1. PEI = 4 (empat ikatan Xe-F)</p>
+        <p>2. PEB = 2 (dua pasang pada Xe)</p>
+        <p>3. Notasi: AX₄E₂</p>
+        <p class="font-semibold text-green-700">4. Bentuk: SEGIEMPAT PLANAR (Square Planar)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4 flex justify-end">
+  <button id="mark-examples-done" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition" disabled>
+    Selesai Mempelajari Contoh
+  </button>
+</div>
+<!-- Tab: Fase 4 Detail -->
+<div id="tab-phase-4-detail" class="tab-panel hidden">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sky-900 font-semibold text-base">Fase 4: ELABORATION (Elaborasi) - 30 menit</h2>
+    <button id="back-to-phases-4" class="focus-ring bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+      ← Kembali ke Menu Fase
+    </button>
+  </div>
+
+  <!-- Progress Bar Fase 4 -->
+  <div class="bg-white rounded-xl border border-sky-100 p-3 mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-semibold text-sky-900">Progress Fase 4</span>
+      <span id="phase-4-progress-text" class="text-xs text-sky-700">0%</span>
+    </div>
+    <div class="w-full bg-sky-100 rounded-full h-3">
+      <div id="phase-4-progress-bar" class="bg-sky-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Aktivitas 4.1: Latihan Soal Bertingkat -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">📝 Aktivitas 4.1: Latihan Soal Bertingkat (15 menit)</h3>
+    <p class="text-sky-800 text-xs mb-3">Selesaikan 3 level soal untuk menguasai konsep VSEPR</p>
+
+    <!-- Level 1 -->
+    <div class="mb-4 border border-sky-200 rounded-lg p-3">
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="text-sm font-semibold text-sky-900">Level 1 - BASIC (Pass: 3/5)</h4>
+        <span id="level1-status" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">🔒 Locked</span>
+      </div>
+
+      <form id="level1-form" class="space-y-3">
+        <div>
+          <p class="text-xs font-semibold text-sky-900">1. Molekul dengan notasi AX₃E₁ memiliki bentuk...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q1" value="a" class="focus-ring"> Tetrahedral
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q1" value="b" class="focus-ring"> Piramida Trigonal
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q1" value="c" class="focus-ring"> Trigonal Planar
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">2. Bentuk molekul CO₂ adalah...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q2" value="a" class="focus-ring"> Bengkok
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q2" value="b" class="focus-ring"> Linear
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q2" value="c" class="focus-ring"> Tetrahedral
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">3. Molekul CH₄ memiliki hibridisasi...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q3" value="a" class="focus-ring"> sp
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q3" value="b" class="focus-ring"> sp²
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q3" value="c" class="focus-ring"> sp³
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">4. Jumlah PEB pada molekul NH₃ adalah...</p>
+          <input type="number" name="l1q4" class="focus-ring w-20 px-2 py-1 rounded border border-sky-200 text-xs" min="0" max="4">
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">5. Sudut ikatan BF₃ adalah...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q5" value="a" class="focus-ring"> 90°
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q5" value="b" class="focus-ring"> 109.5°
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l1q5" value="c" class="focus-ring"> 120°
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center pt-2">
+          <span id="level1-result" class="text-xs text-sky-700"></span>
+          <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+            Submit Level 1
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Level 2 -->
+    <div class="mb-4 border border-sky-200 rounded-lg p-3 opacity-50" id="level2-container">
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="text-sm font-semibold text-sky-900">Level 2 - INTERMEDIATE (Pass: 3/5)</h4>
+        <span id="level2-status" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">🔒 Locked</span>
+      </div>
+
+      <form id="level2-form" class="space-y-3">
+        <div>
+          <p class="text-xs font-semibold text-sky-900">1. NH₃ memiliki sudut ikatan ~107° (bukan 109.5°) karena...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q1" value="a" class="focus-ring"> Tolakan PEB lebih besar dari PEI
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q1" value="b" class="focus-ring"> Atom N lebih kecil
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q1" value="c" class="focus-ring"> Hibridisasi sp²
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">2. Molekul dengan 2 PEI dan 2 PEB memiliki bentuk...</p>
+          <input type="text" name="l2q2" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1" placeholder="Ketik bentuk molekulnya">
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">3. Urutan tolakan dari terbesar ke terkecil adalah...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q3" value="a" class="focus-ring"> PEB-PEB > PEB-PEI > PEI-PEI
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q3" value="b" class="focus-ring"> PEI-PEI > PEB-PEI > PEB-PEB
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q3" value="c" class="focus-ring"> PEB-PEI > PEB-PEB > PEI-PEI
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">4. Hibridisasi atom pusat pada H₂O adalah...</p>
+          <input type="text" name="l2q4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1" placeholder="sp, sp2, atau sp3">
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">5. Molekul XeF₄ memiliki bentuk...</p>
+          <div class="mt-1 space-y-1">
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q5" value="a" class="focus-ring"> Tetrahedral
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q5" value="b" class="focus-ring"> Segiempat Planar
+            </label>
+            <label class="flex items-center gap-2 text-xs">
+              <input type="radio" name="l2q5" value="c" class="focus-ring"> Oktahedral
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center pt-2">
+          <span id="level2-result" class="text-xs text-sky-700"></span>
+          <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition" disabled>
+            Submit Level 2
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Level 3 -->
+    <div class="border border-sky-200 rounded-lg p-3 opacity-50" id="level3-container">
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="text-sm font-semibold text-sky-900">Level 3 - ADVANCED (Pass: 2/3)</h4>
+        <span id="level3-status" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">🔒 Locked</span>
+      </div>
+
+      <form id="level3-form" class="space-y-3">
+        <div>
+          <p class="text-xs font-semibold text-sky-900">1. Bandingkan H₂O dan H₂S dalam hal bentuk dan sudut. Jelaskan perbedaannya!</p>
+          <textarea name="l3q1" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1" placeholder="Jelaskan dengan lengkap (min 100 karakter)"></textarea>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">2. Mengapa SF₆ berbentuk oktahedral sempurna tanpa distorsi?</p>
+          <textarea name="l3q2" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1" placeholder="Jelaskan dengan lengkap (min 100 karakter)"></textarea>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold text-sky-900">3. Prediksi bentuk molekul ClF₃ dan jelaskan mengapa bentuknya demikian!</p>
+          <textarea name="l3q3" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1" placeholder="Jelaskan dengan lengkap (min 100 karakter)"></textarea>
+        </div>
+
+        <div class="flex justify-between items-center pt-2">
+          <span id="level3-result" class="text-xs text-sky-700"></span>
+          <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition" disabled>
+            Submit Level 3
+          </button>
+        </div>
+      </form>
+
+      <div id="level3-feedback" class="hidden mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+        <p class="font-semibold text-blue-900 mb-2">💡 Feedback AI:</p>
+        <div id="level3-feedback-content" class="text-blue-800 space-y-2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aktivitas 4.2: Proyek Analisis Molekul -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">🔬 Aktivitas 4.2: Proyek Analisis Molekul (10 menit)</h3>
+    <p class="text-sky-800 text-xs mb-3">Pilih 1 molekul dan lakukan analisis lengkap</p>
+
+    <form id="project-form" class="space-y-3">
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">Pilih Molekul untuk Dianalisis:</label>
+        <select name="molecule" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50">
+          <option value="">-- Pilih Molekul --</option>
+          <option value="H2S">H₂S</option>
+          <option value="PCl3">PCl₃</option>
+          <option value="SF6">SF₆</option>
+          <option value="XeF4">XeF₄</option>
+          <option value="ClF3">ClF₃</option>
+          <option value="BrF5">BrF₅</option>
+          <option value="ICl4-">ICl₄⁻</option>
+          <option value="SO2">SO₂</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">1. Gambar Struktur Lewis:</label>
+        <div class="border-2 border-dashed border-sky-300 rounded-lg p-4 text-center bg-sky-50">
+          <p class="text-xs text-sky-700 mb-2">Gambar struktur Lewis di kertas, lalu deskripsikan di bawah</p>
+          <textarea name="lewis_structure" rows="3" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs" placeholder="Deskripsikan struktur Lewis yang kamu gambar"></textarea>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">2. Notasi AXE:</label>
+        <input type="text" name="axe_notation" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" placeholder="Contoh: AX3E1">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">3. Geometri Elektron:</label>
+        <select name="electron_geometry" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50">
+          <option value="">-- Pilih --</option>
+          <option value="linear">Linear</option>
+          <option value="trigonal-planar">Trigonal Planar</option>
+          <option value="tetrahedral">Tetrahedral</option>
+          <option value="trigonal-bipyramidal">Trigonal Bipyramidal</option>
+          <option value="oktahedral">Oktahedral</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">4. Bentuk Molekul:</label>
+        <select name="molecular_shape" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50">
+          <option value="">-- Pilih --</option>
+          <option value="linear">Linear</option>
+          <option value="bengkok">Bengkok</option>
+          <option value="trigonal-planar">Trigonal Planar</option>
+          <option value="piramida">Piramida Trigonal</option>
+          <option value="tetrahedral">Tetrahedral</option>
+          <option value="t-shaped">T-shaped</option>
+          <option value="seesaw">Seesaw</option>
+          <option value="square-planar">Square Planar</option>
+          <option value="square-pyramidal">Square Pyramidal</option>
+          <option value="oktahedral">Oktahedral</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">5. Sudut Ikatan (aproksimasi):</label>
+        <input type="text" name="bond_angle" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50" placeholder="Contoh: ~109.5°">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-sky-900 mb-2">6. Penjelasan Lengkap (min 200 karakter):</label>
+        <textarea name="explanation" rows="6" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs bg-sky-50" placeholder="Jelaskan: jumlah PEI, PEB, alasan bentuk molekul, pengaruh tolakan elektron, dll."></textarea>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition">
+          Submit Proyek
+        </button>
+      </div>
+    </form>
+
+    <div id="project-feedback" class="hidden mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-lg">
+      <div class="flex items-start gap-3">
+        <div class="text-3xl">🤖</div>
+        <div class="flex-1">
+          <p class="text-sm font-semibold text-blue-900 mb-2">Feedback AI untuk Proyekmu:</p>
+          <div id="project-feedback-content" class="text-xs text-blue-800 space-y-2"></div>
+          <div id="project-score" class="mt-3 p-2 bg-white rounded border border-blue-200">
+            <p class="text-xs font-semibold text-blue-900">Skor Proyek: <span id="project-score-value" class="text-lg">0</span>/100</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aktivitas 4.3: Diskusi Peer dengan AI -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">💬 Aktivitas 4.3: Diskusi Kasus dengan AI (5 menit)</h3>
+    <p class="text-sky-800 text-xs mb-3">Topik: "Apakah XeF₄ bisa berbentuk tetrahedral? Mengapa?"</p>
+
+    <div id="chat-messages-phase4" class="bg-sky-50 rounded-lg p-3 mb-3 h-64 overflow-y-auto app-scrollbar space-y-2">
+      <div class="flex gap-2">
+        <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white text-xs flex-shrink-0">👤</div>
+        <div class="bg-white rounded-lg p-2 text-xs text-sky-900 max-w-[80%]">
+          Hai! Aku teman belajarmu. Menurutku XeF₄ bisa saja berbentuk tetrahedral karena punya 4 atom F. Bagaimana pendapatmu?
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form-phase4" class="flex gap-2">
+      <textarea id="chat-input-phase4" placeholder="Ketik argumenmu di sini..." class="focus-ring flex-1 px-3 py-2 rounded-lg border border-sky-200 text-xs bg-sky-50 resize-none" rows="2" required></textarea>
+      <button type="submit" class="focus-ring bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition">
+        Kirim
+      </button>
+    </form>
+    <p id="chat-counter-phase4" class="text-[11px] text-sky-700 mt-2">Pertukaran: 0/4 (minimal 4 chat untuk selesai)</p>
+  </section>
+
+  <!-- Badge Fase 4 Selesai -->
+  <div id="phase-4-complete-badge" class="hidden mt-4 bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
+    <div class="text-4xl mb-2">🎉</div>
+    <h3 class="text-green-800 font-bold text-base mb-1">Fase 4 Selesai!</h3>
+    <p class="text-green-700 text-xs">Excellent! Kamu sudah menguasai aplikasi konsep VSEPR. Siap untuk evaluasi akhir di Fase 5!</p>
+  </div>
+</div>
+
+<!-- Tab: Fase 5 Detail -->
+<div id="tab-phase-5-detail" class="tab-panel hidden">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sky-900 font-semibold text-base">Fase 5: EVALUATION (Evaluasi) - 20 menit</h2>
+    <button id="back-to-phases-5" class="focus-ring bg-sky-100 hover:bg-sky-200 text-sky-700 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+      ← Kembali ke Menu Fase
+    </button>
+  </div>
+
+  <!-- Progress Bar Fase 5 -->
+  <div class="bg-white rounded-xl border border-sky-100 p-3 mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-semibold text-sky-900">Progress Fase 5</span>
+      <span id="phase-5-progress-text" class="text-xs text-sky-700">0%</span>
+    </div>
+    <div class="w-full bg-sky-100 rounded-full h-3">
+      <div id="phase-5-progress-bar" class="bg-sky-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <!-- Aktivitas 5.1: Kuis Komprehensif -->
+  <section class="bg-white rounded-xl border border-sky-100 p-4 mb-4">
+    <h3 class="text-sky-900 font-semibold text-sm mb-3">📝 Aktivitas 5.1: Kuis Komprehensif (15 menit)</h3>
+    
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs text-sky-800">Kerjakan kuis berikut dengan teliti. Tidak bisa back setelah next.</p>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-sky-700">Timer:</span>
+        <span id="final-quiz-timer" class="text-sm font-bold text-red-600">15:00</span>
+      </div>
+    </div>
+
+    <form id="final-quiz-form" class="space-y-4">
+      <!-- Bagian A: Pilihan Ganda -->
+      <div class="border-t-2 border-sky-200 pt-3">
+        <h4 class="text-sm font-semibold text-sky-900 mb-3">Bagian A: Pilihan Ganda (10 soal × 1 poin)</h4>
+
+        <div class="space-y-3">
+          <div>
+            <p class="text-xs font-semibold">1. Teori VSEPR menyatakan bahwa bentuk molekul ditentukan oleh...</p>
+            <div class="mt-1 space-y-1">
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq1" value="a" class="focus-ring"> Jumlah proton</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq1" value="b" class="focus-ring"> Minimalisasi tolakan pasangan elektron</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq1" value="c" class="focus-ring"> Massa atom</label>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold">2. Molekul dengan notasi AX₄E₂ memiliki bentuk...</p>
+            <div class="mt-1 space-y-1">
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq2" value="a" class="focus-ring"> Tetrahedral</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq2" value="b" class="focus-ring"> Oktahedral</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq2" value="c" class="focus-ring"> Square Planar</label>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold">3. Urutan tolakan yang benar dari terbesar ke terkecil adalah...</p>
+            <div class="mt-1 space-y-1">
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq3" value="a" class="focus-ring"> PEB-PEB > PEB-PEI > PEI-PEI</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq3" value="b" class="focus-ring"> PEI-PEI > PEB-PEI > PEB-PEB</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq3" value="c" class="focus-ring"> PEB-PEI > PEI-PEI > PEB-PEB</label>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold">4. Hibridisasi pada atom pusat BF₃ adalah...</p>
+            <div class="mt-1 space-y-1">
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq4" value="a" class="focus-ring"> sp</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq4" value="b" class="focus-ring"> sp²</label>
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq4" value="c" class="focus-ring"> sp³</label>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold">5. Sudut ikatan ideal tetrahedral adalah...</p>
+            <div class="mt-1 space-y-1">
+              <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq5" value="a" class="focus-ring"> 90°</label>
+              <label class="flex items-center gap-2 text-xs"><input type
+                <div>
+        <p class="text-xs font-semibold">6. Bentuk molekul NH₃ adalah...</p>
+        <div class="mt-1 space-y-1">
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq6" value="a" class="focus-ring"> Tetrahedral</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq6" value="b" class="focus-ring"> Piramida Trigonal</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq6" value="c" class="focus-ring"> Trigonal Planar</label>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">7. Jumlah PEB pada molekul H₂O adalah...</p>
+        <input type="number" name="fq7" class="focus-ring w-20 px-2 py-1 rounded border border-sky-200 text-xs mt-1" min="0" max="4">
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">8. Molekul dengan hibridisasi sp memiliki bentuk...</p>
+        <div class="mt-1 space-y-1">
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq8" value="a" class="focus-ring"> Linear</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq8" value="b" class="focus-ring"> Bengkok</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq8" value="c" class="focus-ring"> Trigonal Planar</label>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">9. SF₆ memiliki bentuk geometri...</p>
+        <div class="mt-1 space-y-1">
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq9" value="a" class="focus-ring"> Tetrahedral</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq9" value="b" class="focus-ring"> Trigonal Bipyramidal</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq9" value="c" class="focus-ring"> Oktahedral</label>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">10. Perbedaan utama antara bentuk molekul dan geometri elektron adalah...</p>
+        <div class="mt-1 space-y-1">
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq10" value="a" class="focus-ring"> Geometri elektron menghitung PEB, bentuk molekul tidak</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq10" value="b" class="focus-ring"> Bentuk molekul menghitung PEB, geometri elektron tidak</label>
+          <label class="flex items-center gap-2 text-xs"><input type="radio" name="fq10" value="c" class="focus-ring"> Keduanya sama saja</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bagian B: Uraian -->
+  <div class="border-t-2 border-sky-200 pt-3">
+    <h4 class="text-sm font-semibold text-sky-900 mb-3">Bagian B: Uraian (3 soal × 3 poin)</h4>
+
+    <div class="space-y-3">
+      <div>
+        <p class="text-xs font-semibold">1. Jelaskan mengapa ClF₃ berbentuk T-shaped, bukan trigonal planar! (min 100 karakter)</p>
+        <textarea name="fqe1" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1 bg-sky-50"></textarea>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">2. Bandingkan geometri elektron dan bentuk molekul pada SF₄. Jelaskan perbedaannya! (min 100 karakter)</p>
+        <textarea name="fqe2" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1 bg-sky-50"></textarea>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold">3. Prediksi bentuk dan sudut ikatan molekul XeF₂. Jelaskan alasanmu! (min 100 karakter)</p>
+        <textarea name="fqe3" rows="4" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs mt-1 bg-sky-50"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end pt-3 border-t border-sky-100">
+    <button type="submit" class="focus-ring bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-sm font-bold transition shadow-lg">
+      🏁 Submit Kuis Final
+    </button>
+  </div>
+</form>
+
+<div id="final-quiz-result" class="hidden mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-300 rounded-xl">
+  <div class="text-center mb-4">
+    <div class="text-6xl mb-2">🎉</div>
+    <h3 class="text-xl font-bold text-green-800">Kuis Selesai!</h3>
+  </div>
+  <div class="grid gap-3 md:grid-cols-2">
+    <div class="bg-white rounded-lg p-3 border border-green-200">
+      <p class="text-xs text-sky-700 mb-1">Skor Pilihan Ganda</p>
+      <p class="text-2xl font-bold text-sky-900"><span id="final-pg-score">0</span>/10</p>
+    </div>
+    <div class="bg-white rounded-lg p-3 border border-blue-200">
+      <p class="text-xs text-sky-700 mb-1">Skor Uraian (AI)</p>
+      <p class="text-2xl font-bold text-sky-900"><span id="final-essay-score">0</span>/9</p>
+    </div>
+  </div>
+  <div class="mt-3 p-3 bg-white rounded-lg border-2 border-yellow-300">
+    <p class="text-sm font-bold text-sky-900">Skor Total: <span id="final-total-score" class="text-3xl text-green-600">0</span>/19</p>
+    <p class="text-xs text-sky-700 mt-1">Nilai: <span id="final-grade" class="text-lg font-bold">0</span>/100</p>
+  </div>
+  <div id="final-feedback" class="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+    <p class="text-xs font-semibold text-blue-900 mb-1">💡 Feedback:</p>
+    <p id="final-feedback-text" class="text-xs text-blue-800"></p>
+  </div>
+</div>
+<form id="final-reflection-form" class="space-y-3">
+  <div>
+    <label class="block text-xs font-semibold text-sky-900 mb-1">1. Apa konsep paling penting yang kamu pelajari? (min 50 karakter)</label>
+    <textarea name="reflection1" rows="3" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs bg-sky-50"></textarea>
+  </div>
+
+  <div>
+    <label class="block text-xs font-semibold text-sky-900 mb-1">2. Apa yang masih membingungkan atau ingin dipelajari lebih lanjut? (min 50 karakter)</label>
+    <textarea name="reflection2" rows="3" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs bg-sky-50"></textarea>
+  </div>
+
+  <div>
+    <label class="block text-xs font-semibold text-sky-900 mb-1">3. Bagaimana kamu akan menggunakan pengetahuan ini? (min 50 karakter)</label>
+    <textarea name="reflection3" rows="3" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs bg-sky-50"></textarea>
+  </div>
+
+  <div>
+    <label class="block text-xs font-semibold text-sky-900 mb-2">4. Beri rating pengalaman belajar:</label>
+    <div class="flex items-center gap-2">
+      <div class="flex gap-1">
+        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition" data-rating="1">⭐</button>
+        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition" data-rating="2">⭐</button>
+        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition" data-rating="3">⭐</button>
+        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition" data-rating="4">⭐</button>
+        <button type="button" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition" data-rating="5">⭐</button>
+      </div>
+      <span id="rating-value" class="text-xs text-sky-700">(0/5)</span>
+    </div>
+    <input type="hidden" name="rating" id="rating-input" value="0">
+    <textarea name="rating_reason" rows="2" class="focus-ring w-full px-2 py-1 rounded border border-sky-200 text-xs bg-sky-50 mt-2" placeholder="Alasan rating (min 30 karakter)"></textarea>
+  </div>
+
+  <div class="flex justify-end pt-2">
+    <button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-lg text-xs font-medium transition">
+      Simpan Refleksi
+    </button>
+  </div>
+</form>
+
+<div id="reflection-response" class="hidden mt-4 p-4 bg-purple-50 border-2 border-purple-200 rounded-lg">
+  <div class="flex items-start gap-3">
+    <div class="text-3xl">💜</div>
+    <div class="flex-1">
+      <p class="text-sm font-semibold text-purple-900 mb-2">Terima kasih atas refleksimu!</p>
+      <p id="reflection-response-text" class="text-xs text-purple-800"></p>
+    </div>
+  </div>
+</div>
+<div class="overflow-x-auto">
+  <table class="min-w-full text-xs border-collapse">
+    <thead class="bg-sky-100">
+      <tr>
+        <th class="border border-sky-200 px-3 py-2 text-left">Molekul</th>
+        <th class="border border-sky-200 px-3 py-2 text-left">Prediksi Awal</th>
+        <th class="border border-sky-200 px-3 py-2 text-left">Jawaban Benar</th>
+        <th class="border border-sky-200 px-3 py-2 text-center">Status</th>
+      </tr>
+    </thead>
+    <tbody id="prediction-comparison-table">
+      <tr>
+        <td class="border border-sky-200 px-3 py-2">H₂O</td>
+        <td class="border border-sky-200 px-3 py-2" id="pred-h2o">-</td>
+        <td class="border border-sky-200 px-3 py-2">Bengkok</td>
+        <td class="border border-sky-200 px-3 py-2 text-center" id="status-h2o">-</td>
+      </tr>
+      <tr>
+        <td class="border border-sky-200 px-3 py-2">CO₂</td>
+        <td class="border border-sky-200 px-3 py-2" id="pred-co2">-</td>
+        <td class="border border-sky-200 px-3 py-2">Linear</td>
+        <td class="border border-sky-200 px-3 py-2 text-center" id="status-co2">-</td>
+      </tr>
+      <tr>
+        <td class="border border-sky-200 px-3 py-2">NH₃</td>
+        <td class="border border-sky-200 px-3 py-2" id="pred-nh3">-</td>
+        <td class="border border-sky-200 px-3 py-2">Piramida Trigonal</td>
+        <td class="border border-sky-200 px-3 py-2 text-center" id="status-nh3">-</td>
+      </tr>
+      <tr>
+        <td class="border border-sky-200 px-3 py-2">CH₄</td>
+        <td class="border border-sky-200 px-3 py-2" id="pred-ch4">-</td>
+        <td class="border border-sky-200 px-3 py-2">Tetrahedral</td>
+        <td class="border border-sky-200 px-3 py-2 text-center" id="status-ch4">-</td>
+      </tr>
+      <tr>
+        <td class="border border-sky-200 px-3 py-2">BF₃</td>
+        <td class="border border-sky-200 px-3 py-2" id="pred-bf3">-</td>
+        <td class="border border-sky-200 px-3 py-2">Trigonal Planar</td>
+        <td class="border border-sky-200 px-3 py-2 text-center" id="status-bf3">-</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="prediction-summary" class="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-lg">
+  <p class="text-sm font-bold text-green-800 mb-2">📊 Hasil Perkembangan:</p>
+  <p id="prediction-improvement" class="text-xs text-green-700"></p>
+  <p id="prediction-insight" class="text-xs text-blue-700 mt-2"></p>
+</div>
+<div id="certificate-container" class="hidden mt-4 p-6 bg-white border-4 border-yellow-400 rounded-lg shadow-lg">
+  <div class="border-2 border-dashed border-yellow-300 p-4 rounded">
+    <p class="text-sm text-gray-500 mb-2">Certificate of Mastery</p>
+    <h2 class="text-2xl font-bold text-sky-900 mb-3">Molecular Geometry Expert</h2>
+    <p class="text-lg font-semibold text-sky-700 mb-2" id="certificate-name">-</p>
+    <p class="text-xs text-gray-600 mb-3">Telah berhasil menyelesaikan pembelajaran VSEPR & Geometri Molekul</p>
+    <div class="flex items-center justify-center gap-4 text-xs text-gray-500">
+      <span id="certificate-date">-</span>
+      <span>•</span>
+      <span>Skor: <span id="certificate-score" class="font-bold">-</span>/100</span>
+    </div>
+    <div class="mt-4">
+      <span class="inline-block px-4 py-2 bg-yellow-100 border-2 border-yellow-400 rounded-full text-xs font-bold text-yellow-800">
+        ⭐ CERTIFIED ⭐
+      </span>
+    </div>
+  </div>
+</div>
+      </div><!-- Tab: Bahan Ajar Interaktif -->
+      <div id="tab-materials" class="tab-panel hidden">
+       <h2 class="text-sky-900 font-semibold mb-3 text-base">Bahan Ajar Interaktif: VSEPR, Hibridisasi, dan Geometri Molekul</h2><!-- Visualisasi 3D Sederhana (Simulasi dengan SVG) -->
+       <section class="mb-4">
+        <h3 class="text-sky-900 font-semibold mb-2 text-sm">Visualisasi 3D Molekul (Simulasi)</h3>
+        <p class="text-sky-800 text-xs mb-2">Gunakan kontrol di bawah untuk melihat representasi sederhana beberapa bentuk molekul. Ini adalah simulasi 2D yang menggambarkan konsep 3D.</p>
+        <div class="grid gap-3 md:grid-cols-[1.5fr,1fr]">
+         <div class="bg-white rounded-xl border border-sky-100 p-3 flex items-center justify-center">
+          <svg id="vsepr-visual" viewbox="0 0 120 120" class="w-full max-w-[220px]"><!-- Di-update dinamis oleh JS -->
+          </svg>
+         </div>
+         <div class="bg-white rounded-xl border border-sky-100 p-3 space-y-2"><label for="vsepr-select" class="block text-xs text-sky-900">Pilih bentuk molekul</label> <select id="vsepr-select" class="focus-ring w-full px-3 py-2 rounded-lg border border-sky-200 text-xs text-sky-900 bg-sky-50"> <option value="linear">Linier (CO₂)</option> <option value="trigonal-planar">Segitiga datar (BF₃)</option> <option value="tetrahedral" selected>Tetrahedral (CH₄)</option> <option value="pyramidal">Piramida trigonal (NH₃)</option> <option value="bent">Bengkok (H₂O)</option> </select>
+          <div class="text-sky-800 text-xs">
+           <p id="vsepr-description" class="mb-1">Tetrahedral: 4 pasangan elektron ikatan tersusun simetris di sekitar atom pusat.</p>
+           <p>Warna biru muda = atom pusat, titik biru gelap = atom di sekelilingnya. Garis menunjukkan pasangan elektron ikatan.</p>
+          </div>
+         </div>
+        </div>
+       </section><!-- Penjelasan Hibridisasi -->
+       <section class="mb-4">
+        <h3 class="text-sky-900 font-semibold mb-2 text-sm">Penjelasan Singkat Hibridisasi</h3>
+        <div class="bg-white rounded-xl border border-sky-100 p-3 text-sky-800 text-xs space-y-1">
+         <p><span class="font-semibold">sp</span> → 2 orbital hibrida, bentuk linier (180°), contoh: BeCl₂, CO₂.</p>
+         <p><span class="font-semibold">sp²</span> → 3 orbital hibrida, bentuk segitiga datar (120°), contoh: BF₃.</p>
+         <p><span class="font-semibold">sp³</span> → 4 orbital hibrida, bentuk tetrahedral (109,5°), contoh: CH₄, NH₃, H₂O.</p>
+         <p>Hubungkan: jumlah pasangan elektron di sekitar atom pusat biasanya sama dengan jumlah orbital hibrida yang terbentuk.</p>
+        </div>
+       </section><!-- Video Embedded (Placeholder) -->
+       <section>
+        <h3 class="text-sky-900 font-semibold mb-2 text-sm">Video Pembelajaran (Placeholder)</h3>
+        <div class="bg-white rounded-xl border border-sky-100 p-3 text-sky-800 text-xs space-y-2">
+         <p>Di lingkungan Canva Code, pemutaran video nyata dari internet dibatasi. Gunakan area ini sebagai pengingat embed video (YouTube, dll.) di luar Canva Code, misalnya di slide atau halaman lain.</p>
+         <div class="w-full aspect-[16/9] bg-sky-100 border border-sky-200 rounded-lg flex items-center justify-center text-[11px] text-sky-700">
+          Area placeholder video: "Teori VSEPR &amp; Bentuk Molekul"
+         </div>
+        </div>
+       </section>
+      </div><!-- Tab: Kuis Interaktif -->
+      <div id="tab-quiz" class="tab-panel hidden">
+       <h2 id="quiz-title" class="text-sky-900 font-semibold mb-3 text-base">Kuis Interaktif: Teori VSEPR &amp; Geometri Molekul (Demo)</h2>
+       <p class="text-sky-800 text-sm mb-3">Jawab minimal 15 soal berikut. Kuis ini akan memberi skor otomatis untuk pilihan ganda &amp; isian singkat. Bagian esai akan diberi feedback otomatis sederhana (simulasi AI).</p>
+       <div class="flex items-center justify-between mb-3 text-xs text-sky-800">
+        <div><span class="font-semibold">Timer kuis:</span> <span id="quiz-timer">–</span> <span class="text-[11px] text-sky-700">(simulasi 15 menit)</span>
+        </div>
+        <div id="quiz-status" class="text-[11px] text-sky-700"></div>
+       </div>
+       <form id="quiz-form" class="bg-white rounded-xl border border-sky-100 p-3 shadow-sm space-y-3"><!-- Soal-multiple choice / isian singkat (ringkas tapi ≥15) -->
+        <div class="space-y-2 text-xs text-sky-900"><!-- Beberapa contoh; penilaian otomatis di JS -->
+         <div>
+          <p class="font-semibold">1. Teori VSEPR digunakan untuk menentukan...</p><label class="flex items-center gap-2 mt-1"> <input type="radio" name="q1" value="a" class="focus-ring"> <span>Energi ionisasi atom.</span> </label> <label class="flex items-center gap-2"> <input type="radio" name="q1" value="b" class="focus-ring"> <span>Bentuk molekul.</span> </label> <label class="flex items-center gap-2"> <input type="radio" name="q1" value="c" class="focus-ring"> <span>Jenis ikatan logam.</span> </label>
+         </div>
+         <div>
+          <p class="font-semibold">2. Jumlah total pasangan elektron (ikatan + bebas) di sekitar atom pusat CH₄ adalah...</p><input name="q2" type="number" class="focus-ring mt-1 w-24 px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">3. Bentuk molekul H₂O menurut VSEPR adalah...</p><input name="q3" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50" placeholder="Tulis: bengkok / V-bent, dll.">
+         </div>
+         <div>
+          <p class="font-semibold">4. Hibridisasi atom pusat pada BF₃ adalah...</p><input name="q4" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50" placeholder="Contoh: sp2">
+         </div>
+         <div>
+          <p class="font-semibold">5. Sudut ikatan ideal molekul tetrahedral adalah sekitar...</p><input name="q5" type="text" class="focus-ring mt-1 w-32 px-2 py-1 rounded border border-sky-200 bg-sky-50" placeholder="Derajat">
+         </div>
+         <div>
+          <p class="font-semibold">6. CO₂ memiliki bentuk...</p><label class="flex items-center gap-2 mt-1"> <input type="radio" name="q6" value="linear" class="focus-ring"> <span>Linier</span> </label> <label class="flex items-center gap-2"> <input type="radio" name="q6" value="bent" class="focus-ring"> <span>Bengkok</span> </label> <label class="flex items-center gap-2"> <input type="radio" name="q6" value="tetra" class="focus-ring"> <span>Tetrahedral</span> </label>
+         </div>
+         <div>
+          <p class="font-semibold">7. NH₃ memiliki pasangan elektron bebas pada atom pusat sebanyak...</p><input name="q7" type="number" class="focus-ring mt-1 w-24 px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">8. Molekul berikut yang <span class="italic">bukan</span> tetrahedral adalah...</p><input name="q8" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50" placeholder="Contoh: NH3 / CO2 / dll.">
+         </div>
+         <div>
+          <p class="font-semibold">9. Semakin banyak pasangan elektron bebas, sudut ikatan biasanya...</p><label class="flex items-center gap-2 mt-1"> <input type="radio" name="q9" value="mengecil" class="focus-ring"> <span>Mengecil</span> </label> <label class="flex items-center gap-2"> <input type="radio" name="q9" value="membesar" class="focus-ring"> <span>Membesar</span> </label>
+         </div>
+         <div>
+          <p class="font-semibold">10. Tuliskan nama bentuk molekul untuk CH₄:</p><input name="q10" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">11. Tuliskan jenis hibridisasi pada atom pusat H₂O:</p><input name="q11" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">12. Bentuk molekul dengan 3 pasangan elektron ikatan dan 1 bebas pada atom pusat adalah...</p><input name="q12" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">13. Contoh molekul yang memiliki bentuk piramida trigonal adalah...</p><input name="q13" type="text" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50">
+         </div>
+         <div>
+          <p class="font-semibold">14. Esai singkat: Jelaskan hubungan antara jumlah pasangan elektron di sekitar atom pusat dengan bentuk molekul.</p><textarea name="essay" rows="4" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50"></textarea>
+         </div>
+         <div>
+          <p class="font-semibold">15. Esai singkat: Mengapa sudut ikatan pada H₂O lebih kecil dari CH₄?</p><textarea name="essay2" rows="4" class="focus-ring mt-1 w-full px-2 py-1 rounded border border-sky-200 bg-sky-50"></textarea>
+         </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-sky-100"><button type="submit" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-md"> Kumpulkan Kuis </button>
+         <div class="text-right text-xs text-sky-800">
+          <p id="quiz-score-text">Skor: -</p>
+          <p id="quiz-feedback-text" class="text-[11px] text-sky-700"></p>
+         </div>
+        </div>
+       </form><!-- Pembahasan / Feedback AI (Simulasi) -->
+       <section id="quiz-discussion" class="mt-3 hidden bg-sky-50 border border-sky-100 rounded-xl p-3 text-xs text-sky-900 space-y-2">
+        <h3 class="font-semibold text-sm">Pembahasan &amp; Rekomendasi (Simulasi AI)</h3>
+        <p id="quiz-explanation">Setelah kuis dikumpulkan, di sini akan muncul ringkasan kekuatan dan kelemahanmu berdasarkan jawaban.</p>
+       </section>
+      </div><!-- Tab: Dashboard Siswa -->
+      <div id="tab-student-dashboard" class="tab-panel hidden">
+       <h2 id="student-dashboard-title" class="text-sky-900 font-semibold mb-3 text-base">Dashboard Belajar Siswa</h2>
+       <p class="text-sky-800 text-sm mb-3">Lihat progres aktivitas dan hasil kuis kamu. Data disimpan di lembar kerja Canva dan dapat diakses guru.</p>
+       <div id="student-dashboard-content" class="space-y-3 text-xs text-sky-900">
+        <p id="student-dashboard-info" class="text-sky-700">Masuk sebagai siswa untuk melihat data pribadimu.</p>
+        <div id="student-progress-section" class="hidden grid gap-3 md:grid-cols-[1.5fr,1fr]">
+         <div class="bg-white rounded-xl border border-sky-100 p-3">
+          <h3 class="font-semibold mb-2 text-sm">Progress 5 Fase</h3>
+          <div class="space-y-1 text-xs">
+           <div class="flex items-center justify-between"><span>Fase 1</span> <span id="sp-phase-1" class="font-semibold text-sky-700">-</span>
+           </div>
+           <div class="flex items-center justify-between"><span>Fase 2</span> <span id="sp-phase-2" class="font-semibold text-sky-700">-</span>
+           </div>
+           <div class="flex items-center justify-between"><span>Fase 3</span> <span id="sp-phase-3" class="font-semibold text-sky-700">-</span>
+           </div>
+           <div class="flex items-center justify-between"><span>Fase 4</span> <span id="sp-phase-4" class="font-semibold text-sky-700">-</span>
+           </div>
+           <div class="flex items-center justify-between"><span>Fase 5</span> <span id="sp-phase-5" class="font-semibold text-sky-700">-</span>
+           </div>
+          </div>
+         </div>
+         <div class="bg-white rounded-xl border border-sky-100 p-3">
+          <h3 class="font-semibold mb-2 text-sm">Skor Kuis &amp; Rekomendasi</h3>
+          <p id="student-quiz-score" class="mb-1">Skor kuis: -</p>
+          <p id="student-ai-recommendation" class="text-sky-700 text-[11px]">Rekomendasi personal (simulasi AI) akan muncul setelah kamu mengerjakan kuis.</p>
+         </div>
+        </div><!-- Grafik perkembangan sederhana -->
+        <div id="student-chart-section" class="hidden bg-white rounded-xl border border-sky-100 p-3">
+         <h3 class="font-semibold mb-2 text-sm">Grafik Perkembangan (Simulasi)</h3>
+         <div class="w-full max-w-md h-24 bg-sky-50 border border-sky-100 rounded-lg flex items-end gap-1 p-2"><!-- Batang diagram sederhana; tinggi diupdate dari skor -->
+          <div class="flex-1 flex flex-col justify-end items-center">
+           <div id="chart-bar-progress" class="w-6 bg-sky-500 rounded-t-md" style="height: 20%;"></div><span class="text-[10px] mt-1 text-sky-800">Progress</span>
+          </div>
+          <div class="flex-1 flex flex-col justify-end items-center">
+           <div id="chart-bar-score" class="w-6 bg-sky-700 rounded-t-md" style="height: 20%;"></div><span class="text-[10px] mt-1 text-sky-800">Skor</span>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div><!-- Tab: Dashboard Guru -->
+      <div id="tab-teacher-dashboard" class="tab-panel hidden">
+       <h2 id="teacher-dashboard-title" class="text-sky-900 font-semibold mb-3 text-base">Dashboard Monitoring Guru (Demo)</h2>
+       <p class="text-sky-800 text-sm mb-3">Lihat daftar siswa, progress 5 fase, dan skor kuis. Tabel ini bersifat demo dan memanfaatkan lembar kerja Canva sebagai penyimpan data.</p>
+       <div class="flex flex-wrap gap-3 items-center justify-between mb-2 text-xs">
+        <div class="flex gap-2 items-center"><label for="teacher-filter-name" class="text-sky-900">Filter nama:</label> <input id="teacher-filter-name" type="text" class="focus-ring px-2 py-1 rounded border border-sky-200 bg-sky-50" placeholder="Cari nama siswa">
+        </div>
+        <div class="flex gap-2 items-center"><label for="teacher-filter-score" class="text-sky-900">Minimal skor:</label> <input id="teacher-filter-score" type="number" class="focus-ring w-20 px-2 py-1 rounded border border-sky-200 bg-sky-50">
+        </div><button id="export-csv-btn" class="focus-ring bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm"> Export CSV (Demo) </button>
+       </div>
+       <div id="teacher-analytics" class="bg-white rounded-xl border border-sky-100 p-3 mb-3 text-xs text-sky-900 grid gap-3 md:grid-cols-[1.3fr,1fr]">
+        <div>
+         <h3 class="font-semibold mb-1 text-sm">Analitik Kelas (Simulasi)</h3>
+         <p id="teacher-avg-score">Rata-rata skor kuis: -</p>
+         <p id="teacher-students-count">Jumlah siswa tercatat: 0</p>
+         <p id="teacher-needs-help" class="text-sky-700 text-[11px]">Siswa yang perlu perhatian khusus (skor &lt; 60) akan ditandai di tabel.</p>
+        </div>
+        <div class="flex items-center justify-center">
+         <div class="w-full max-w-[180px] h-24 bg-sky-50 border border-sky-100 rounded-lg flex items-end gap-1 p-2">
+          <div class="flex-1 flex flex-col justify-end items-center">
+           <div id="chart-class-avg" class="w-6 bg-sky-500 rounded-t-md" style="height: 10%;"></div><span class="text-[10px] mt-1 text-sky-800">Rata-rata</span>
+          </div>
+          <div class="flex-1 flex flex-col justify-end items-center">
+           <div id="chart-class-max" class="w-6 bg-sky-700 rounded-t-md" style="height: 10%;"></div><span class="text-[10px] mt-1 text-sky-800">Maks</span>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="bg-white rounded-xl border border-sky-100 p-3 text-xs text-sky-900">
+        <div class="overflow-x-auto app-scrollbar">
+         <table class="min-w-full text-left border-collapse">
+          <thead>
+           <tr class="border-b border-sky-100 bg-sky-50 text-[11px]">
+            <th class="px-2 py-1">Nama</th>
+            <th class="px-2 py-1">F1</th>
+            <th class="px-2 py-1">F2</th>
+            <th class="px-2 py-1">F3</th>
+            <th class="px-2 py-1">F4</th>
+            <th class="px-2 py-1">F5</th>
+            <th class="px-2 py-1">Skor</th>
+            <th class="px-2 py-1">Feedback Guru</th>
+           </tr>
+          </thead>
+          <tbody id="teacher-table-body"><!-- Diisi dinamis -->
+          </tbody>
+         </table>
+        </div>
+        <p class="mt-2 text-[11px] text-sky-700">Klik sel "Feedback Guru" untuk menulis catatan per siswa. Perubahan akan disimpan di lembar kerja Canva.</p>
+       </div>
+      </div>
+     </section><!-- Panel Kanan: Info Tambahan -->
+     <aside id="right-panel" class="bg-white rounded-xl border border-sky-100 p-3 flex flex-col gap-3 min-h-[200px] hidden">
+      <section aria-label="Informasi pembelajaran" class="flex-1 flex flex-col min-h-0">
+       <h2 class="text-sky-900 font-semibold mb-2 text-sm">Informasi Pembelajaran</h2>
+       <div class="bg-sky-50 border border-sky-100 rounded-lg p-3 text-xs text-sky-900 space-y-3">
+        <div>
+         <h3 class="font-semibold mb-1">Tips Belajar VSEPR</h3>
+         <ul class="list-disc list-inside space-y-1 text-[11px]">
+          <li>Hitung total pasangan elektron di sekitar atom pusat</li>
+          <li>Bedakan pasangan elektron ikatan dan bebas</li>
+          <li>Gunakan visualisasi 3D untuk memahami bentuk molekul</li>
+          <li>Latihan soal secara rutin untuk menguasai konsep</li>
+         </ul>
+        </div>
+        <div>
+         <h3 class="font-semibold mb-1">Sumber Belajar Tambahan</h3>
+         <p class="text-[11px] text-sky-700">Gunakan bahan ajar interaktif dan visualisasi molekul untuk memperdalam pemahaman tentang geometri molekul dan hibridisasi.</p>
+        </div>
+       </div>
+      </section>
+     </aside>
+    </section>
+    <footer class="w-full text-[11px] text-sky-100 bg-sky-700 mt-2">
+     <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+      <p id="footer-text" class="text-sky-100/90">Demo platform pembelajaran kimia interaktif – VSEPR, Hibridisasi, dan Geometri Molekul.</p>
+      <p class="text-sky-100/80">Mode: <span id="footer-role-text">Belum memilih</span></p>
+     </div>
+    </footer>
+   </div>
+  </main>
+  <script>
+    (function () {
+      // -------------------------------
+      // Konfigurasi & SDK
+      // -------------------------------
+      const defaultConfig = {
+        main_title: "Pembelajaran Kimia Interaktif: Teori VSEPR & Geometri Molekul",
+        subtitle_text: "Aktivitas berbasis Kurikulum Merdeka untuk siswa kelas XI",
+        cp_title: "Capaian Pembelajaran (CP) Kurikulum Merdeka",
+        tp_title: "Tujuan Pembelajaran (TP)",
+        indicator_title: "Indikator Pencapaian Kompetensi",
+        quiz_title: "Kuis Interaktif: Teori VSEPR & Geometri Molekul (Demo)",
+        student_dashboard_title: "Dashboard Belajar Siswa",
+        teacher_dashboard_title: "Dashboard Monitoring Guru (Demo)",
+        footer_text: "Demo platform pembelajaran kimia interaktif – VSEPR, Hibridisasi, dan Geometri Molekul.",
+        background_color: "#e0f2fe",
+        surface_color: "#ffffff",
+        text_color: "#0f172a",
+        primary_action_color: "#0284c7",
+        secondary_action_color: "#0ea5e9",
+        font_family: "system-ui",
+        font_size: 18
+      };
+
+      let currentConfig = { ...defaultConfig };
+      let elementSdkReady = false;
+      let dataSdkReady = false;
+
+      /** Data cache dari Data SDK */
+      let allRecords = [];
+      let currentStudentName = "";
+      let currentRole = "";
+      let currentStudentRecord = null;
+      let dataLimitWarningShown = false;
+
+      // Fase 1 tracking
+      let phase1ChatCount = 0;
+
+      // -------------------------------
+      // Helper DOM
+      // -------------------------------
+      function $(id) {
+        return document.getElementById(id);
+      }
+
+      function setText(id, text) {
+        const el = $(id);
+        if (el) el.textContent = text;
+      }
+
+      // -------------------------------
+      // onConfigChange -> update UI
+      // -------------------------------
+      async function applyConfig(config) {
+        currentConfig = { ...defaultConfig, ...config };
+
+        setText("main-title", currentConfig.main_title);
+        setText("subtitle-text", currentConfig.subtitle_text);
+        setText("cp-title", currentConfig.cp_title);
+        setText("tp-title", currentConfig.tp_title);
+        setText("indicator-title", currentConfig.indicator_title);
+        setText("quiz-title", currentConfig.quiz_title);
+        setText("student-dashboard-title", currentConfig.student_dashboard_title);
+        setText("teacher-dashboard-title", currentConfig.teacher_dashboard_title);
+        setText("footer-text", currentConfig.footer_text);
+
+        document.body.style.backgroundColor = currentConfig.background_color;
+        const baseFontStack = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        const fullFont = `${currentConfig.font_family}, ${baseFontStack}`;
+        document.body.style.fontFamily = fullFont;
+
+        const baseSize = currentConfig.font_size || 14;
+        const mainTitle = $("main-title");
+        if (mainTitle) mainTitle.style.fontSize = baseSize * 1.4 + "px";
+        const subtitle = $("subtitle-text");
+        if (subtitle) subtitle.style.fontSize = baseSize * 0.9 + "px";
+
+        const sdTitle = $("student-dashboard-title");
+        if (sdTitle) sdTitle.style.fontSize = baseSize * 1.2 + "px";
+        const tdTitle = $("teacher-dashboard-title");
+        if (tdTitle) tdTitle.style.fontSize = baseSize * 1.2 + "px";
+
+        const surfaces = document.querySelectorAll(".bg-white");
+        surfaces.forEach(el => {
+          el.style.backgroundColor = currentConfig.surface_color;
+        });
+
+        const primaryButtons = document.querySelectorAll(
+          "#unified-login-form button, #quiz-form button[type='submit'], #export-csv-btn, #mark-video-done, #chat-form button, #prediction-form button"
+        );
+        primaryButtons.forEach(btn => {
+          btn.style.backgroundColor = currentConfig.primary_action_color;
+        });
+
+        document.querySelectorAll("p, li, span, td, th, label, input, textarea, select, button")
+          .forEach(el => {
+            el.style.color = currentConfig.text_color;
+            el.style.fontSize = baseSize * 0.85 + "px";
+          });
+
+        document.querySelectorAll("h2, h3")
+          .forEach(el => {
+            el.style.color = currentConfig.text_color;
+            el.style.fontSize = baseSize * 1.1 + "px";
+          });
+
+        document.querySelectorAll("nav button.tab-btn")
+          .forEach(btn => {
+            if (!btn.classList.contains("bg-sky-600")) {
+              btn.style.backgroundColor = currentConfig.surface_color;
+              btn.style.color = currentConfig.text_color;
+            }
+          });
+      }
+
+      // -------------------------------
+      // Element SDK init
+      // -------------------------------
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            await applyConfig(config);
+          },
+          mapToCapabilities: (config) => {
+            const cfg = { ...defaultConfig, ...config };
+            return {
+              recolorables: [
+                {
+                  get: () => cfg.background_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ background_color: value });
+                  }
+                },
+                {
+                  get: () => cfg.surface_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ surface_color: value });
+                  }
+                },
+                {
+                  get: () => cfg.text_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ text_color: value });
+                  }
+                },
+                {
+                  get: () => cfg.primary_action_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ primary_action_color: value });
+                  }
+                },
+                {
+                  get: () => cfg.secondary_action_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ secondary_action_color: value });
+                  }
+                }
+              ],
+              borderables: [],
+              fontEditable: {
+                get: () => cfg.font_family,
+                set: (value) => {
+                  window.elementSdk.setConfig({ font_family: value });
+                }
+              },
+              fontSizeable: {
+                get: () => cfg.font_size,
+                set: (value) => {
+                  const sizeNum = Number(value) || defaultConfig.font_size;
+                  window.elementSdk.setConfig({ font_size: sizeNum });
+                }
+              }
+            };
+          },
+          mapToEditPanelValues: (config) => {
+            const cfg = { ...defaultConfig, ...config };
+            return new Map([
+              ["main_title", cfg.main_title],
+              ["subtitle_text", cfg.subtitle_text],
+              ["cp_title", cfg.cp_title],
+              ["tp_title", cfg.tp_title],
+              ["indicator_title", cfg.indicator_title],
+              ["quiz_title", cfg.quiz_title],
+              ["student_dashboard_title", cfg.student_dashboard_title],
+              ["teacher_dashboard_title", cfg.teacher_dashboard_title],
+              ["footer_text", cfg.footer_text]
+            ]);
+          }
+        });
+        elementSdkReady = true;
+        applyConfig(window.elementSdk.config || defaultConfig);
+      } else {
+        applyConfig(defaultConfig);
+      }
+
+      // -------------------------------
+      // Data SDK init
+      // -------------------------------
+      if (window.dataSdk) {
+        const handler = {
+          onDataChanged(data) {
+            allRecords = data || [];
+            updateCurrentStudentRecord();
+            renderTeacherView();
+            renderStudentDashboard();
+            updatePhase1UI();
+          }
+        };
+        window.dataSdk.init(handler).then((result) => {
+          if (result.isOk) {
+            dataSdkReady = true;
+          } else {
+            dataSdkReady = false;
+          }
+        });
+      }
+
+      // -------------------------------
+      // Tab Navigation
+      // -------------------------------
+      const tabButtons = document.querySelectorAll("nav button.tab-btn");
+      const tabPanels = {
+        login: $("tab-login"),
+        "cp-tp": $("tab-cp-tp"),
+        phases: $("tab-phases"),
+        "phase-1-detail": $("tab-phase-1-detail"),
+        materials: $("tab-materials"),
+        quiz: $("tab-quiz"),
+        "student-dashboard": $("tab-student-dashboard"),
+        "teacher-dashboard": $("tab-teacher-dashboard")
+      };
+
+      function showTab(key) {
+        Object.keys(tabPanels).forEach(k => {
+          if (tabPanels[k]) {
+            tabPanels[k].classList.toggle("hidden", k !== key);
+          }
+        });
+        tabButtons.forEach(btn => {
+          const tabKey = btn.getAttribute("data-tab");
+          if (tabKey === key) {
+            btn.classList.add("bg-sky-600", "text-white");
+            btn.classList.remove("bg-sky-50", "text-sky-700");
+          } else {
+            btn.classList.remove("bg-sky-600", "text-white");
+            btn.classList.add("bg-sky-50", "text-sky-700");
+          }
+        });
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const key = btn.getAttribute("data-tab");
+          if (key) showTab(key);
+        });
+      });
+
+      showTab("login");
+
+      // -------------------------------
+      // Role Switching
+      // -------------------------------
+      function updateRoleUI() {
+        const label = $("current-role-label");
+        const footerRole = $("footer-role-text");
+        let text = "Mode: Belum memilih peran";
+
+        if (currentRole === "student") {
+          text = currentStudentName
+            ? `Mode: Siswa (${currentStudentName})`
+            : "Mode: Siswa (belum ada nama)";
+        } else if (currentRole === "teacher") {
+          text = currentStudentName
+            ? `Mode: Guru (${currentStudentName})`
+            : "Mode: Guru";
+        }
+
+        if (label) label.textContent = text;
+        if (footerRole) footerRole.textContent = currentRole || "Belum memilih";
+      }
+
+      $("switch-role-btn").addEventListener("click", () => {
+        const header = $("main-header");
+        const nav = $("main-nav");
+        if (header) header.classList.add("hidden");
+        if (nav) nav.classList.add("hidden");
+        
+        currentStudentName = "";
+        currentRole = "";
+        currentStudentRecord = null;
+        updateRoleUI();
+        showTab("login");
+      });
+
+      // -------------------------------
+      // Data SDK Helpers
+      // -------------------------------
+      function canCreateMoreRecords() {
+        if (!allRecords) return true;
+        if (allRecords.length >= 999) {
+          if (!dataLimitWarningShown) {
+            dataLimitWarningShown = true;
+            const el = $("quiz-status");
+            if (el) {
+              el.textContent = "Batas 999 data tercapai. Hapus beberapa data di Canva Sheet.";
+            }
+          }
+          return false;
+        }
+        return true;
+      }
+
+      function updateCurrentStudentRecord() {
+        if (!currentStudentName || !allRecords) {
+          currentStudentRecord = null;
+          return;
+        }
+        const records = allRecords.filter(r =>
+          r.record_type === "student" && r.student_name === currentStudentName
+        );
+        if (records.length > 0) {
+          currentStudentRecord = records[records.length - 1];
+        } else {
+          currentStudentRecord = null;
+        }
+      }
+
+      async function upsertStudentRecord(patch) {
+        if (!dataSdkReady || !window.dataSdk) return;
+
+        if (!currentStudentRecord && !canCreateMoreRecords()) return;
+
+        const baseData = currentStudentRecord || {
+          record_type: "student",
+          student_name: currentStudentName || "Tanpa Nama",
+          student_email: "",
+          role: "student",
+          phase_1_done: false,
+          phase_1_video_done: false,
+          phase_1_chat_done: false,
+          phase_1_prediction_done: false,
+          phase_1_chat_count: 0,
+          phase_1_start_time: "",
+          phase_1_end_time: "",
+          prediction_h2o: "",
+          prediction_co2: "",
+          prediction_nh3: "",
+          prediction_ch4: "",
+          prediction_bf3: "",
+          phase_2_done: false,
+          phase_3_done: false,
+          phase_4_done: false,
+          phase_5_done: false,
+          quiz_score: 0,
+          quiz_completed: false,
+          essay_answer: "",
+          teacher_feedback: "",
+          created_at: new Date().toISOString()
+        };
+
+        const newData = { ...baseData, ...patch };
+
+        if (currentStudentRecord && currentStudentRecord.__backendId) {
+          const toUpdate = { ...currentStudentRecord, ...patch };
+          const result = await window.dataSdk.update(toUpdate);
+          if (!result.isOk) {
+            const el = $("quiz-status");
+            if (el) el.textContent = "Gagal menyimpan ke lembar kerja.";
+          }
+        } else {
+          const { __backendId, ...createPayload } = newData;
+          const result = await window.dataSdk.create(createPayload);
+          if (!result.isOk) {
+            const el = $("quiz-status");
+            if (el) el.textContent = "Gagal membuat data siswa baru.";
+          }
+        }
+      }
+
+      // -------------------------------
+      // Login Form
+      // -------------------------------
+      let currentLoginMode = "student";
+      let currentStudentFormMode = "login";
+
+      const toggleStudent = $("toggle-student");
+      const toggleTeacher = $("toggle-teacher");
+      const toggleLogin = $("toggle-login");
+      const toggleRegister = $("toggle-register");
+      const studentModeToggle = $("student-mode-toggle");
+      const emailField = $("email-field");
+      const nameField = $("name-field");
+      const passwordField = $("password-field");
+      const confirmPasswordField = $("confirm-password-field");
+      const nameLabel = $("name-label");
+      const submitBtn = $("submit-btn");
+      const loginInfo = $("login-info");
+      const emailInput = $("email-input");
+      const nameInput = $("name-input");
+      const passwordInput = $("password-input");
+      const confirmPasswordInput = $("confirm-password-input");
+      const loginErrorMsg = $("login-error-msg");
+      const loginSuccessMsg = $("login-success-msg");
+
+      function updateLoginMode(mode) {
+        currentLoginMode = mode;
+
+        if (mode === "student") {
+          toggleStudent.classList.add("bg-white", "text-sky-700", "shadow-md");
+          toggleStudent.classList.remove("text-sky-600");
+          toggleTeacher.classList.remove("bg-white", "text-sky-700", "shadow-md");
+          toggleTeacher.classList.add("text-sky-600");
+
+          studentModeToggle.classList.remove("hidden");
+          updateStudentFormMode(currentStudentFormMode);
+        } else {
+          toggleTeacher.classList.add("bg-white", "text-sky-700", "shadow-md");
+          toggleTeacher.classList.remove("text-sky-600");
+          toggleStudent.classList.remove("bg-white", "text-sky-700", "shadow-md");
+          toggleStudent.classList.add("text-sky-600");
+
+          studentModeToggle.classList.add("hidden");
+
+          emailField.classList.add("hidden");
+          nameField.classList.remove("hidden");
+          passwordField.classList.remove("hidden");
+          confirmPasswordField.classList.add("hidden");
+          
+          emailInput.required = false;
+          nameInput.required = true;
+          passwordInput.required = true;
+          confirmPasswordInput.required = false;
+
+          nameLabel.textContent = "Nama Lengkap";
+          submitBtn.textContent = "Masuk sebagai Guru";
+          loginInfo.textContent = "Guru dapat memantau progress siswa dan memberikan feedback pembelajaran";
+        }
+
+        if (loginErrorMsg) {
+          loginErrorMsg.classList.add("hidden");
+          loginErrorMsg.textContent = "";
+        }
+        if (loginSuccessMsg) {
+          loginSuccessMsg.classList.add("hidden");
+          loginSuccessMsg.textContent = "";
+        }
+      }
+
+      function updateStudentFormMode(mode) {
+        currentStudentFormMode = mode;
+
+        if (mode === "login") {
+          toggleLogin.classList.add("bg-sky-600", "text-white");
+          toggleLogin.classList.remove("bg-transparent", "text-sky-700");
+          toggleRegister.classList.remove("bg-sky-600", "text-white");
+          toggleRegister.classList.add("bg-transparent", "text-sky-700");
+
+          emailField.classList.remove("hidden");
+          nameField.classList.add("hidden");
+          passwordField.classList.remove("hidden");
+          confirmPasswordField.classList.add("hidden");
+
+          emailInput.required = true;
+          nameInput.required = false;
+          passwordInput.required = true;
+          confirmPasswordInput.required = false;
+
+          submitBtn.textContent = "Login";
+          loginInfo.textContent = "Belum punya akun? Klik 'Daftar Akun Baru' di atas";
+        } else {
+          toggleRegister.classList.add("bg-sky-600", "text-white");
+          toggleRegister.classList.remove("bg-transparent", "text-sky-700");
+          toggleLogin.classList.remove("bg-sky-600", "text-white");
+          toggleLogin.classList.add("bg-transparent", "text-sky-700");
+
+          emailField.classList.remove("hidden");
+          nameField.classList.remove("hidden");
+          passwordField.classList.remove("hidden");
+          confirmPasswordField.classList.remove("hidden");
+
+          emailInput.required = true;
+          nameInput.required = true;
+          passwordInput.required = true;
+          confirmPasswordInput.required = true;
+
+          submitBtn.textContent = "Daftar Akun";
+          loginInfo.textContent = "Sudah punya akun? Klik 'Login' di atas";
+        }
+
+        if (loginErrorMsg) {
+          loginErrorMsg.classList.add("hidden");
+          loginErrorMsg.textContent = "";
+        }
+        if (loginSuccessMsg) {
+          loginSuccessMsg.classList.add("hidden");
+          loginSuccessMsg.textContent = "";
+        }
+      }
+
+      if (toggleStudent) {
+        toggleStudent.addEventListener("click", () => updateLoginMode("student"));
+      }
+      if (toggleTeacher) {
+        toggleTeacher.addEventListener("click", () => updateLoginMode("teacher"));
+      }
+
+      if (toggleLogin) {
+        toggleLogin.addEventListener("click", () => updateStudentFormMode("login"));
+      }
+      if (toggleRegister) {
+        toggleRegister.addEventListener("click", () => updateStudentFormMode("register"));
+      }
+
+      updateLoginMode("student");
+
+      const unifiedLoginForm = $("unified-login-form");
+      if (unifiedLoginForm) {
+        unifiedLoginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const name = nameInput.value.trim();
+          const email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
+          const confirmPassword = confirmPasswordInput.value.trim();
+
+          if (loginErrorMsg) {
+            loginErrorMsg.classList.add("hidden");
+            loginErrorMsg.textContent = "";
+          }
+          if (loginSuccessMsg) {
+            loginSuccessMsg.classList.add("hidden");
+            loginSuccessMsg.textContent = "";
+          }
+
+          if (currentLoginMode === "student") {
+            if (currentStudentFormMode === "register") {
+              if (!email || !name || !password || !confirmPassword) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Semua field harus diisi";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              if (password !== confirmPassword) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Password dan konfirmasi password tidak cocok";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              if (password.length < 6) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Password minimal 6 karakter";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              const existingAccount = allRecords.find(r => 
+                r.record_type === "account" && r.student_email === email
+              );
+
+              if (existingAccount) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Email sudah terdaftar. Silakan login.";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              if (!canCreateMoreRecords()) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Batas maksimal akun tercapai (999). Hubungi admin.";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              submitBtn.disabled = true;
+              submitBtn.textContent = "Mendaftar...";
+
+              const accountData = {
+                record_type: "account",
+                student_name: name,
+                student_email: email,
+                password: password,
+                role: "student",
+                created_at: new Date().toISOString()
+              };
+
+              const result = await window.dataSdk.create(accountData);
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Daftar Akun";
+
+              if (result.isOk) {
+                if (loginSuccessMsg) {
+                  loginSuccessMsg.textContent = "Akun berhasil dibuat! Silakan login.";
+                  loginSuccessMsg.classList.remove("hidden");
+                }
+                nameInput.value = "";
+                emailInput.value = "";
+                passwordInput.value = "";
+                confirmPasswordInput.value = "";
+                
+                setTimeout(() => {
+                  updateStudentFormMode("login");
+                }, 2000);
+              } else {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Gagal membuat akun. Coba lagi.";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+              }
+
+            } else {
+              if (!email || !password) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Email dan password harus diisi";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              const account = allRecords.find(r => 
+                r.record_type === "account" && 
+                r.student_email === email && 
+                r.password === password
+              );
+
+              if (!account) {
+                if (loginErrorMsg) {
+                  loginErrorMsg.textContent = "Email atau password salah";
+                  loginErrorMsg.classList.remove("hidden");
+                }
+                return;
+              }
+
+              currentStudentName = account.student_name;
+              currentRole = "student";
+              updateRoleUI();
+
+              const header = $("main-header");
+              const nav = $("main-nav");
+              if (header) header.classList.remove("hidden");
+              if (nav) nav.classList.remove("hidden");
+
+              showTab("cp-tp");
+              
+              await upsertStudentRecord({ student_email: email });
+            }
+
+          } else {
+            if (!name || !password) {
+              if (loginErrorMsg) {
+                loginErrorMsg.textContent = "Nama dan password harus diisi";
+                loginErrorMsg.classList.remove("hidden");
+              }
+              return;
+            }
+
+            if (password !== "guru123") {
+              if (loginErrorMsg) {
+                loginErrorMsg.textContent = "Password salah";
+                loginErrorMsg.classList.remove("hidden");
+              }
+              return;
+            }
+
+            currentStudentName = name;
+            currentRole = "teacher";
+            updateRoleUI();
+
+            const header = $("main-header");
+            const nav = $("main-nav");
+            if (header) header.classList.remove("hidden");
+            if (nav) nav.classList.remove("hidden");
+
+            showTab("teacher-dashboard");
+          }
+        });
+      }
+
+      // -------------------------------
+      // Phase 1 Card Click
+      // -------------------------------
+      const phase1Card = $("phase-1-card");
+      if (phase1Card) {
+        phase1Card.addEventListener("click", async () => {
+          if (currentRole !== "student") return;
+          
+          // Set start time jika belum ada
+          if (!currentStudentRecord || !currentStudentRecord.phase_1_start_time) {
+            await upsertStudentRecord({ 
+              phase_1_start_time: new Date().toISOString() 
+            });
+          }
+          
+          showTab("phase-1-detail");
+        });
+      }
+
+      // Back to phases button
+      const backToPhases = $("back-to-phases");
+      if (backToPhases) {
+        backToPhases.addEventListener("click", () => {
+          showTab("phases");
+        });
+      }
+
+      // -------------------------------
+      // Phase 1: Video Activity
+      // -------------------------------
+      const markVideoDone = $("mark-video-done");
+      if (markVideoDone) {
+        markVideoDone.addEventListener("click", async () => {
+          markVideoDone.disabled = true;
+          markVideoDone.textContent = "Menyimpan...";
+          
+          await upsertStudentRecord({ phase_1_video_done: true });
+          
+          markVideoDone.disabled = false;
+          markVideoDone.textContent = "Selesai ✓";
+          
+          updatePhase1Progress();
+        });
+      }
+
+      // -------------------------------
+      // Phase 1: Chat Activity
+      // -------------------------------
+      const chatForm = $("chat-form");
+      const chatInput = $("chat-input");
+      const chatMessages = $("chat-messages");
+      const chatCounter = $("chat-counter");
+
+      if (chatForm) {
+        chatForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          
+          const userMessage = chatInput.value.trim();
+          if (!userMessage) return;
+
+          // Add user message
+          const userDiv = document.createElement("div");
+          userDiv.className = "flex gap-2 justify-end";
+          userDiv.innerHTML = `
+            <div class="bg-sky-600 text-white rounded-lg p-2 text-xs max-w-[80%]">
+              ${userMessage}
+            </div>
+            <div class="w-8 h-8 rounded-full bg-sky-300 flex items-center justify-center text-xs flex-shrink-0">👤</div>
+          `;
+          chatMessages.appendChild(userDiv);
+
+          chatInput.value = "";
+          phase1ChatCount++;
+
+          // Scroll to bottom
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          // AI Response (simulasi dengan analisis jawaban)
+          setTimeout(() => {
+            const aiDiv = document.createElement("div");
+            aiDiv.className = "flex gap-2";
+            
+            const userMsg = userMessage.toLowerCase();
+            let aiResponse = "";
+            
+            if (phase1ChatCount === 1) {
+              // Analisis jawaban pertama
+              if (userMsg.includes("elektron") || userMsg.includes("atom") || userMsg.includes("ikatan")) {
+                aiResponse = "Bagus sekali! Kamu sudah mengarah ke konsep yang tepat. Elektron memang berperan penting dalam menentukan bentuk molekul. Coba pikirkan: bagaimana pasangan elektron di sekitar atom pusat mempengaruhi bentuk molekul? 🔬";
+              } else if (userMsg.includes("bentuk") || userMsg.includes("struktur") || userMsg.includes("geometri")) {
+                aiResponse = "Benar, bentuk molekul memang yang kita bahas! Tapi apa yang menentukan bentuk itu? Coba pikirkan tentang partikel-partikel di dalam atom, khususnya elektron. Apa peran mereka? 🤔";
+              } else {
+                aiResponse = "Hmm, jawaban yang menarik! Mari kita fokus pada struktur atom. Coba pikirkan: apa peran elektron dalam menentukan bentuk molekul? Elektron di sekitar atom pusat sangat penting lho! 💡";
+              }
+            } else if (phase1ChatCount === 2) {
+              // Analisis jawaban kedua
+              if (userMsg.includes("tolak") || userMsg.includes("repulsi") || userMsg.includes("menjauh")) {
+                aiResponse = "Luar biasa! Kamu sudah menemukan konsep kunci: pasangan elektron saling tolak-menolak! Ini disebut tolakan elektron. Menurutmu, bagaimana tolakan ini mempengaruhi posisi atom-atom dalam molekul? 🎯";
+              } else if (userMsg.includes("pasangan") || userMsg.includes("bebas") || userMsg.includes("ikatan")) {
+                aiResponse = "Tepat! Pasangan elektron (baik ikatan maupun bebas) sangat penting. Tahukah kamu bahwa pasangan-pasangan elektron ini saling tolak-menolak? Bagaimana menurutmu hal ini mempengaruhi bentuk molekul? 💡";
+              } else {
+                aiResponse = "Oke, kamu sudah mulai memahami! Sekarang konsep penting: pasangan elektron di sekitar atom pusat saling tolak-menolak. Mereka berusaha menjauh satu sama lain. Bagaimana ini mempengaruhi bentuk molekul? 🔬";
+              }
+            } else if (phase1ChatCount >= 3) {
+              // Analisis jawaban ketiga
+              if (userMsg.includes("jauh") || userMsg.includes("maksimal") || userMsg.includes("optimal") || userMsg.includes("seimbang")) {
+                aiResponse = "Sempurna! 🎉 Kamu sudah memahami konsep dasar teori VSEPR: pasangan elektron akan mengatur diri sejauh mungkin untuk meminimalkan tolakan. Inilah yang menentukan bentuk molekul! Kamu siap melanjutkan ke aktivitas berikutnya! 🌟";
+              } else if (userMsg.includes("bentuk") || userMsg.includes("geometri") || userMsg.includes("sudut")) {
+                aiResponse = "Benar sekali! 🎉 Tolakan antar pasangan elektron membuat mereka mengatur posisi sejauh mungkin, dan ini menentukan bentuk geometri molekul. Ini adalah inti dari teori VSEPR! Kamu sudah siap lanjut ke aktivitas berikutnya! 🌟";
+              } else {
+                aiResponse = "Bagus! 🎉 Kamu sudah memahami bahwa pasangan elektron saling tolak-menolak dan ini menentukan bentuk molekul. Konsep ini adalah dasar dari teori VSEPR (Valence Shell Electron Pair Repulsion). Lanjutkan ke aktivitas berikutnya! 🌟";
+              }
+            }
+
+            aiDiv.innerHTML = `
+              <div class="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white text-xs flex-shrink-0">🤖</div>
+              <div class="bg-white rounded-lg p-2 text-xs text-sky-900 max-w-[80%]">
+                ${aiResponse}
+              </div>
+            `;
+            chatMessages.appendChild(aiDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Update counter
+            chatCounter.textContent = `Percakapan: ${phase1ChatCount}/3`;
+
+            // Save to database
+            if (phase1ChatCount >= 3) {
+              upsertStudentRecord({ 
+                phase_1_chat_done: true,
+                phase_1_chat_count: phase1ChatCount
+              });
+              updatePhase1Progress();
+            } else {
+              upsertStudentRecord({ 
+                phase_1_chat_count: phase1ChatCount
+              });
+            }
+          }, 1000);
+        });
+      }
+
+      // -------------------------------
+      // Phase 1: Prediction Form
+      // -------------------------------
+      const predictionForm = $("prediction-form");
+      if (predictionForm) {
+        predictionForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          
+          const formData = new FormData(predictionForm);
+          const h2o = formData.get("h2o");
+          const co2 = formData.get("co2");
+          const nh3 = formData.get("nh3");
+          const ch4 = formData.get("ch4");
+          const bf3 = formData.get("bf3");
+
+          const submitBtn = predictionForm.querySelector("button[type='submit']");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Menyimpan...";
+
+          // Jawaban benar
+          const correctAnswers = {
+            h2o: "bengkok",
+            co2: "linear",
+            nh3: "piramida",
+            ch4: "tetrahedral",
+            bf3: "trigonal-planar"
+          };
+
+          // Hitung skor
+          let score = 0;
+          if (h2o === correctAnswers.h2o) score++;
+          if (co2 === correctAnswers.co2) score++;
+          if (nh3 === correctAnswers.nh3) score++;
+          if (ch4 === correctAnswers.ch4) score++;
+          if (bf3 === correctAnswers.bf3) score++;
+
+          // Tampilkan hasil
+          const answersDiv = $("prediction-answers");
+          if (answersDiv) answersDiv.classList.remove("hidden");
+
+          // Update hasil per molekul
+          const h2oResult = $("h2o-result");
+          const co2Result = $("co2-result");
+          const nh3Result = $("nh3-result");
+          const ch4Result = $("ch4-result");
+          const bf3Result = $("bf3-result");
+
+          if (h2oResult) h2oResult.textContent = h2o === correctAnswers.h2o ? "✓ Benar!" : "✗ Prediksimu: " + (h2o || "-");
+          if (co2Result) co2Result.textContent = co2 === correctAnswers.co2 ? "✓ Benar!" : "✗ Prediksimu: " + (co2 || "-");
+          if (nh3Result) nh3Result.textContent = nh3 === correctAnswers.nh3 ? "✓ Benar!" : "✗ Prediksimu: " + (nh3 || "-");
+          if (ch4Result) ch4Result.textContent = ch4 === correctAnswers.ch4 ? "✓ Benar!" : "✗ Prediksimu: " + (ch4 || "-");
+          if (bf3Result) bf3Result.textContent = bf3 === correctAnswers.bf3 ? "✓ Benar!" : "✗ Prediksimu: " + (bf3 || "-");
+
+          // Update skor
+          const scoreValue = $("prediction-score-value");
+          if (scoreValue) scoreValue.textContent = score;
+
+          await upsertStudentRecord({
+            phase_1_prediction_done: true,
+            prediction_h2o: h2o,
+            prediction_co2: co2,
+            prediction_nh3: nh3,
+            prediction_ch4: ch4,
+            prediction_bf3: bf3
+          });
+
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Tersimpan ✓";
+
+          updatePhase1Progress();
+
+          // Scroll ke jawaban
+          setTimeout(() => {
+            answersDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 300);
+        });
+      }
+
+      // -------------------------------
+      // Phase 1: Progress Update
+      // -------------------------------
+      function updatePhase1Progress() {
+        if (!currentStudentRecord) return;
+
+        const videoDone = currentStudentRecord.phase_1_video_done || false;
+        const chatDone = currentStudentRecord.phase_1_chat_done || false;
+        const predictionDone = currentStudentRecord.phase_1_prediction_done || false;
+
+        let progress = 0;
+        if (videoDone) progress += 33;
+        if (chatDone) progress += 33;
+        if (predictionDone) progress += 34;
+
+        const progressBar = $("phase-1-progress-bar");
+        const progressText = $("phase-1-progress-text");
+        
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (progressText) progressText.textContent = `${progress}%`;
+
+        // Update badges
+        const badgeVideo = $("badge-video");
+        const badgeChat = $("badge-chat");
+        const badgePrediction = $("badge-prediction");
+
+        if (badgeVideo) {
+          if (videoDone) {
+            badgeVideo.classList.remove("bg-gray-100", "text-gray-600");
+            badgeVideo.classList.add("bg-green-100", "text-green-700");
+          }
+        }
+
+        if (badgeChat) {
+          if (chatDone) {
+            badgeChat.classList.remove("bg-gray-100", "text-gray-600");
+            badgeChat.classList.add("bg-green-100", "text-green-700");
+          }
+        }
+
+        if (badgePrediction) {
+          if (predictionDone) {
+            badgePrediction.classList.remove("bg-gray-100", "text-gray-600");
+            badgePrediction.classList.add("bg-green-100", "text-green-700");
+          }
+        }
+
+        // Update checkmarks
+        const checkVideo = $("check-video");
+        const checkChat = $("check-chat");
+        const checkPrediction = $("check-prediction");
+
+        if (checkVideo) checkVideo.classList.toggle("hidden", !videoDone);
+        if (checkChat) checkChat.classList.toggle("hidden", !chatDone);
+        if (checkPrediction) checkPrediction.classList.toggle("hidden", !predictionDone);
+
+        // Check if all done
+        if (videoDone && chatDone && predictionDone) {
+          const completeBadge = $("phase-1-complete-badge");
+          if (completeBadge) completeBadge.classList.remove("hidden");
+
+          // Update phase 1 done and set end time
+          upsertStudentRecord({
+            phase_1_done: true,
+            phase_1_end_time: new Date().toISOString()
+          });
+
+          // Update phase status in main menu
+          const phase1Status = $("phase-1-status");
+          if (phase1Status) {
+            phase1Status.innerHTML = `
+              <span class="status-dot w-2 h-2 rounded-full bg-green-500"></span>
+              <span class="status-text">Selesai</span>
+            `;
+            phase1Status.classList.remove("bg-sky-50", "border-sky-200", "text-sky-800");
+            phase1Status.classList.add("bg-green-50", "border-green-200", "text-green-800");
+          }
+        }
+      }
+
+      function updatePhase1UI() {
+        if (!currentStudentRecord) return;
+
+        const videoDone = currentStudentRecord.phase_1_video_done || false;
+        const chatDone = currentStudentRecord.phase_1_chat_done || false;
+        const predictionDone = currentStudentRecord.phase_1_prediction_done || false;
+        const phase1Done = currentStudentRecord.phase_1_done || false;
+        
+        phase1ChatCount = currentStudentRecord.phase_1_chat_count || 0;
+
+        // Update video status
+        const videoStatus = $("video-status");
+        const markVideoDoneBtn = $("mark-video-done");
+        if (videoDone) {
+          if (videoStatus) videoStatus.textContent = "Video telah ditonton ✓";
+          if (markVideoDoneBtn) {
+            markVideoDoneBtn.textContent = "Selesai ✓";
+            markVideoDoneBtn.disabled = true;
+          }
+        }
+
+        // Update chat counter
+        if (chatCounter) chatCounter.textContent = `Percakapan: ${phase1ChatCount}/3`;
+
+        // Update prediction form
+        if (predictionDone) {
+          const predictionSubmitBtn = predictionForm ? predictionForm.querySelector("button[type='submit']") : null;
+          if (predictionSubmitBtn) {
+            predictionSubmitBtn.textContent = "Tersimpan ✓";
+            predictionSubmitBtn.disabled = true;
+          }
+
+          // Fill form with saved values
+          if (predictionForm) {
+            const h2oSelect = predictionForm.querySelector("select[name='h2o']");
+            const co2Select = predictionForm.querySelector("select[name='co2']");
+            const nh3Select = predictionForm.querySelector("select[name='nh3']");
+            const ch4Select = predictionForm.querySelector("select[name='ch4']");
+            const bf3Select = predictionForm.querySelector("select[name='bf3']");
+
+            if (h2oSelect) h2oSelect.value = currentStudentRecord.prediction_h2o || "";
+            if (co2Select) co2Select.value = currentStudentRecord.prediction_co2 || "";
+            if (nh3Select) nh3Select.value = currentStudentRecord.prediction_nh3 || "";
+            if (ch4Select) ch4Select.value = currentStudentRecord.prediction_ch4 || "";
+            if (bf3Select) bf3Select.value = currentStudentRecord.prediction_bf3 || "";
+          }
+        }
+
+        // Update phase 1 status in main menu
+        const phase1Status = $("phase-1-status");
+        if (phase1Status && phase1Done) {
+          phase1Status.innerHTML = `
+            <span class="status-dot w-2 h-2 rounded-full bg-green-500"></span>
+            <span class="status-text">Selesai</span>
+          `;
+          phase1Status.classList.remove("bg-sky-50", "border-sky-200", "text-sky-800");
+          phase1Status.classList.add("bg-green-50", "border-green-200", "text-green-800");
+        }
+
+        updatePhase1Progress();
+      }
+
+      // -------------------------------
+      // Phase Toggles (Fase 2-5)
+      // -------------------------------
+      function setupPhaseToggle(phaseNum) {
+        const btn = $(`phase-${phaseNum}-toggle`);
+        if (!btn) return;
+
+        btn.addEventListener("click", async () => {
+          if (!currentStudentName) return;
+          const statusDot = btn.querySelector(".status-dot");
+          const statusText = btn.querySelector(".status-text");
+          const field = `phase_${phaseNum}_done`;
+          const currentVal = currentStudentRecord ? !!currentStudentRecord[field] : false;
+          const newVal = !currentVal;
+
+          btn.disabled = true;
+          if (statusText) statusText.textContent = "Menyimpan...";
+          await upsertStudentRecord({ [field]: newVal });
+          btn.disabled = false;
+
+          if (statusDot) statusDot.classList.toggle("bg-sky-500", newVal);
+          if (statusDot) statusDot.classList.toggle("bg-sky-300", !newVal);
+          if (statusText) statusText.textContent = newVal ? "Selesai" : "Belum selesai";
+
+          renderStudentDashboard();
+        });
+      }
+
+      [2, 3, 4, 5].forEach(setupPhaseToggle);
+
+      // -------------------------------
+      // VSEPR Visual (SVG)
+      // -------------------------------
+      const vseprSvg = $("vsepr-visual");
+      const vseprSelect = $("vsepr-select");
+      const vseprDesc = $("vsepr-description");
+
+      function renderVsepr(type) {
+        if (!vseprSvg) return;
+        vseprSvg.innerHTML = "";
+        const NS = "http://www.w3.org/2000/svg";
+
+        function circle(cx, cy, r, fill) {
+          const c = document.createElementNS(NS, "circle");
+          c.setAttribute("cx", cx);
+          c.setAttribute("cy", cy);
+          c.setAttribute("r", r);
+          c.setAttribute("fill", fill);
+          return c;
+        }
+        function line(x1, y1, x2, y2) {
+          const l = document.createElementNS(NS, "line");
+          l.setAttribute("x1", x1);
+          l.setAttribute("y1", y1);
+          l.setAttribute("x2", x2);
+          l.setAttribute("y2", y2);
+          l.setAttribute("stroke", "#0284c7");
+          l.setAttribute("stroke-width", "2");
+          return l;
+        }
+
+        const centerX = 60, centerY = 60;
+        vseprSvg.appendChild(circle(centerX, centerY, 8, "#0ea5e9"));
+
+        if (type === "linear") {
+          vseprSvg.appendChild(line(20, 60, 100, 60));
+          vseprSvg.appendChild(circle(20, 60, 5, "#0369a1"));
+          vseprSvg.appendChild(circle(100, 60, 5, "#0369a1"));
+          vseprDesc.textContent = "Linier: 2 pasangan elektron ikatan, sudut 180°. Contoh: CO₂.";
+        } else if (type === "trigonal-planar") {
+          const r = 30;
+          for (let i = 0; i < 3; i++) {
+            const angle = (i * 120 - 90) * Math.PI / 180;
+            const x = centerX + r * Math.cos(angle);
+            const y = centerY + r * Math.sin(angle);
+            vseprSvg.appendChild(line(centerX, centerY, x, y));
+            vseprSvg.appendChild(circle(x, y, 5, "#0369a1"));
+          }
+          vseprDesc.textContent = "Segitiga datar: 3 pasangan ikatan, sudut 120°. Contoh: BF₃.";
+        } else if (type === "tetrahedral") {
+          const points = [
+            [60, 22],
+            [30, 80],
+            [90, 80],
+            [60, 60]
+          ];
+          points.forEach(([x, y]) => {
+            vseprSvg.appendChild(line(centerX, centerY, x, y));
+            vseprSvg.appendChild(circle(x, y, 5, "#0369a1"));
+          });
+          vseprDesc.textContent = "Tetrahedral: 4 pasangan ikatan, sudut ~109,5°. Contoh: CH₄.";
+        } else if (type === "pyramidal") {
+          const r = 30;
+          const baseAngles = [210, 330];
+          baseAngles.forEach(a => {
+            const rad = a * Math.PI / 180;
+            const x = centerX + r * Math.cos(rad);
+            const y = centerY + r * Math.sin(rad);
+            vseprSvg.appendChild(line(centerX, centerY, x, y));
+            vseprSvg.appendChild(circle(x, y, 5, "#0369a1"));
+          });
+          vseprSvg.appendChild(line(centerX, centerY, centerX, 20));
+          vseprSvg.appendChild(circle(centerX, 20, 5, "#0369a1"));
+          vseprDesc.textContent = "Piramida trigonal: 3 ikatan + 1 pasangan bebas. Contoh: NH₃.";
+        } else if (type === "bent") {
+          const r = 30;
+          const angles = [210, 330];
+          angles.forEach(a => {
+            const rad = a * Math.PI / 180;
+            const x = centerX + r * Math.cos(rad);
+            const y = centerY + r * Math.sin(rad);
+            vseprSvg.appendChild(line(centerX, centerY, x, y));
+            vseprSvg.appendChild(circle(x, y, 5, "#0369a1"));
+          });
+          vseprDesc.textContent = "Bengkok: 2 ikatan + 2 pasangan bebas. Contoh: H₂O.";
+        }
+      }
+
+      if (vseprSelect) {
+        vseprSelect.addEventListener("change", () => {
+          renderVsepr(vseprSelect.value);
+        });
+      }
+      renderVsepr("tetrahedral");
+
+      // -------------------------------
+      // Kuis: Timer & Penilaian
+      // -------------------------------
+      let quizTimerInterval = null;
+      let quizTimeLeft = 15 * 60;
+
+      function startQuizTimer() {
+        if (quizTimerInterval) return;
+        const timerEl = $("quiz-timer");
+        const statusEl = $("quiz-status");
+        quizTimerInterval = setInterval(() => {
+          if (quizTimeLeft <= 0) {
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = null;
+            if (statusEl) statusEl.textContent = "Waktu habis (simulasi).";
+            return;
+          }
+          quizTimeLeft -= 1;
+          const m = Math.floor(quizTimeLeft / 60);
+          const s = quizTimeLeft % 60;
+          if (timerEl) timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        }, 1000);
+      }
+
+      const quizForm = $("quiz-form");
+
+      if (quizForm) {
+        quizForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          startQuizTimer();
+
+          const formData = new FormData(quizForm);
+          let score = 0;
+          let totalAuto = 13;
+
+          if (formData.get("q1") === "b") score++;
+          if (Number(formData.get("q2")) === 4) score++;
+          if ((formData.get("q3") || "").toString().toLowerCase().includes("bengkok")) score++;
+          if ((formData.get("q4") || "").toString().toLowerCase().includes("sp2")) score++;
+          if ((formData.get("q5") || "").toString().includes("109")) score++;
+          if (formData.get("q6") === "linear") score++;
+          if (Number(formData.get("q7")) === 1) score++;
+          if ((formData.get("q9") || "").toString() === "mengecil") score++;
+          if ((formData.get("q10") || "").toString().toLowerCase().includes("tetra")) score++;
+          if ((formData.get("q11") || "").toString().toLowerCase().includes("sp3")) score++;
+          if ((formData.get("q12") || "").toString().toLowerCase().includes("piram")) score++;
+          if ((formData.get("q8") || "").toString().toLowerCase().includes("co2")) score++;
+          if ((formData.get("q13") || "").toString().toLowerCase().includes("nh3")) score++;
+
+          const essay = (formData.get("essay") || "").toString().trim();
+          const essay2 = (formData.get("essay2") || "").toString().trim();
+
+          const percent = Math.round(score / totalAuto * 100);
+          setText("quiz-score-text", `Skor: ${percent} / 100 (otomatis)`);
+          const fb = $("quiz-feedback-text");
+          if (fb) {
+            fb.textContent = percent >= 80
+              ? "Pemahaman konsep sangat baik. Lanjutkan ke soal yang lebih menantang."
+              : percent >= 60
+                ? "Sudah cukup baik, perkuat kembali konsep VSEPR dan hibridisasi."
+                : "Perlu mengulang ringkasan materi dan diskusi dengan guru.";
+          }
+
+          const discussion = $("quiz-discussion");
+          const explanation = $("quiz-explanation");
+          if (discussion && explanation) {
+            discussion.classList.remove("hidden");
+            explanation.textContent =
+              "Simulasi analisis AI: " +
+              (percent >= 80
+                ? "Jawabanmu konsisten untuk bentuk molekul dan hibridisasi. Cobalah menganalisis molekul yang lebih kompleks."
+                : percent >= 60
+                  ? "Beberapa konsep sudah tepat, tetapi masih ada kebingungan antara jumlah pasangan elektron dan bentuk molekul."
+                  : "Perlu memperkuat pemahaman dasar teori VSEPR. Disarankan mengulang fase eksplorasi & eksplanasi.");
+          }
+
+          await upsertStudentRecord({
+            quiz_score: percent,
+            quiz_completed: true,
+            essay_answer: essay + " || " + essay2
+          });
+
+          renderStudentDashboard();
+        });
+      }
+
+      // -------------------------------
+      // Student Dashboard rendering
+      // -------------------------------
+      function renderStudentDashboard() {
+        const info = $("student-dashboard-info");
+        const section = $("student-progress-section");
+        const chartSec = $("student-chart-section");
+        const sp1 = $("sp-phase-1");
+        const sp2 = $("sp-phase-2");
+        const sp3 = $("sp-phase-3");
+        const sp4 = $("sp-phase-4");
+        const sp5 = $("sp-phase-5");
+        const quizScoreEl = $("student-quiz-score");
+        const recEl = $("student-ai-recommendation");
+        const barProg = $("chart-bar-progress");
+        const barScore = $("chart-bar-score");
+
+        if (!currentStudentName || currentRole !== "student") {
+          if (info) info.textContent = "Masuk sebagai siswa untuk melihat data pribadimu.";
+          if (section) section.classList.add("hidden");
+          if (chartSec) chartSec.classList.add("hidden");
+          return;
+        }
+
+        if (!currentStudentRecord) {
+          if (info) info.textContent = "Data belum tersimpan. Mulailah dengan menyelesaikan salah satu fase atau kuis.";
+          if (section) section.classList.add("hidden");
+          if (chartSec) chartSec.classList.add("hidden");
+          return;
+        }
+
+        if (info) info.textContent = `Halo, ${currentStudentName}. Berikut rangkuman progress belajarmu.`;
+        if (section) section.classList.remove("hidden");
+        if (chartSec) chartSec.classList.remove("hidden");
+
+        const fields = ["phase_1_done", "phase_2_done", "phase_3_done", "phase_4_done", "phase_5_done"];
+        const statusElems = [sp1, sp2, sp3, sp4, sp5];
+        let doneCount = 0;
+        fields.forEach((f, i) => {
+          const done = !!currentStudentRecord[f];
+          if (done) doneCount++;
+          if (statusElems[i]) statusElems[i].textContent = done ? "Selesai" : "Belum";
+        });
+
+        const progressPercent = Math.round(doneCount / 5 * 100);
+        if (barProg) barProg.style.height = `${20 + progressPercent * 0.6}%`;
+
+        const quizScore = Number(currentStudentRecord.quiz_score) || 0;
+        if (quizScoreEl) quizScoreEl.textContent = `Skor kuis: ${quizScore}`;
+        if (barScore) barScore.style.height = `${20 + quizScore * 0.6}%`;
+
+        if (recEl) {
+          recEl.textContent = quizScore >= 80
+            ? "Kamu sudah menguasai materi dasar. Coba terapkan pada molekul yang lebih kompleks."
+            : quizScore >= 60
+              ? "Perkuat kembali konsep jumlah pasangan elektron dan bentuk molekul, lalu ulangi beberapa soal."
+              : "Baca ulang ringkasan teori VSEPR dan lakukan diskusi dengan guru atau teman.";
+        }
+      }
+
+      // -------------------------------
+      // Teacher Dashboard rendering
+      // -------------------------------
+      const teacherFilterName = $("teacher-filter-name");
+      const teacherFilterScore = $("teacher-filter-score");
+
+      function renderTeacherView() {
+        const tbody = $("teacher-table-body");
+        const avgEl = $("teacher-avg-score");
+        const countEl = $("teacher-students-count");
+        const chartAvg = $("chart-class-avg");
+        const chartMax = $("chart-class-max");
+
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        const students = (allRecords || []).filter(r => r.record_type === "student");
+
+        const nameFilter = teacherFilterName ? teacherFilterName.value.trim().toLowerCase() : "";
+        const minScore = teacherFilterScore ? Number(teacherFilterScore.value) || 0 : 0;
+
+        let filtered = students.filter(r => {
+          const nameOk = !nameFilter || (r.student_name || "").toLowerCase().includes(nameFilter);
+          const scoreOk = (Number(r.quiz_score) || 0) >= minScore;
+          return nameOk && scoreOk;
+        });
+
+        let totalScore = 0;
+        let maxScore = 0;
+        let countWithScore = 0;
+        filtered.forEach(r => {
+          const s = Number(r.quiz_score) || 0;
+          if (s > 0) {
+            totalScore += s;
+            maxScore = Math.max(maxScore, s);
+            countWithScore++;
+          }
+        });
+        const avg = countWithScore ? (totalScore / countWithScore) : 0;
+        if (avgEl) avgEl.textContent = `Rata-rata skor kuis: ${avg.toFixed(1)}`;
+        if (countEl) countEl.textContent = `Jumlah siswa tercatat: ${students.length}`;
+
+        if (chartAvg) chartAvg.style.height = `${10 + avg * 0.6}%`;
+        if (chartMax) chartMax.style.height = `${10 + maxScore * 0.6}%`;
+
+        filtered.forEach(record => {
+          const tr = document.createElement("tr");
+          tr.className = "border-t border-sky-50 text-[11px]";
+          const score = Number(record.quiz_score) || 0;
+          if (score > 0 && score < 60) {
+            tr.classList.add("bg-red-50");
+          }
+
+          const phases = [
+            record.phase_1_done,
+            record.phase_2_done,
+            record.phase_3_done,
+            record.phase_4_done,
+            record.phase_5_done
+          ];
+
+          function td(text) {
+            const cell = document.createElement("td");
+            cell.className = "px-2 py-1";
+            cell.textContent = text;
+            return cell;
+          }
+
+          tr.appendChild(td(record.student_name || "Tanpa Nama"));
+          phases.forEach(p => {
+            tr.appendChild(td(p ? "✓" : "–"));
+          });
+          tr.appendChild(td(score ? String(score) : "-"));
+
+          const feedbackCell = document.createElement("td");
+          feedbackCell.className = "px-2 py-1 min-w-[120px] cursor-text";
+          feedbackCell.textContent = record.teacher_feedback || "";
+          feedbackCell.addEventListener("click", () => {
+            const current = feedbackCell.textContent || "";
+            const input = document.createElement("textarea");
+            input.className = "focus-ring w-full px-1 py-0.5 rounded border border-sky-200 bg-sky-50 text-[11px]";
+            input.value = current;
+            feedbackCell.innerHTML = "";
+            feedbackCell.appendChild(input);
+            input.focus();
+            input.addEventListener("blur", async () => {
+              const newVal = input.value.trim();
+              feedbackCell.textContent = newVal;
+              if (dataSdkReady && window.dataSdk && record.__backendId) {
+                const updated = { ...record, teacher_feedback: newVal };
+                await window.dataSdk.update(updated);
+              }
+            });
+          });
+          tr.appendChild(feedbackCell);
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      if (teacherFilterName) {
+        teacherFilterName.addEventListener("input", renderTeacherView);
+      }
+      if (teacherFilterScore) {
+        teacherFilterScore.addEventListener("input", renderTeacherView);
+      }
+
+      // -------------------------------
+      // Export CSV (Demo)
+      // -------------------------------
+      $("export-csv-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        const status = $("quiz-status");
+        if (status) {
+          status.textContent =
+            "Export CSV demo: salin data dari Canva Sheet untuk dikonversi ke CSV di luar Canva.";
+        }
+      });
+
+      // -------------------------------
+      // Mulai timer kuis ketika tab kuis dibuka pertama kali
+      // -------------------------------
+      const quizTabButton = document.querySelector("button[data-tab='quiz']");
+      if (quizTabButton) {
+        quizTabButton.addEventListener("click", () => {
+          startQuizTimer();
+        });
+      }
+    })();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a3c2c0c0299f7e6',t:'MTc2NDAyMTU1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
